@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Environment / secrets — never commit these
+.env
+token.json
+credentials.json
+service_account.json
+
+# Generated Excel files — kept locally, not tracked in git
+*.xlsx
+
+# macOS
+.DS_Store
