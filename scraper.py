@@ -110,12 +110,12 @@ BRAVE_QUERIES = [
     f"LGBTQ tech conference {_YEARS}",
     f"Lesbians Who Tech {_YEARS}",
     f"Out in Tech conference {_YEARS}",
-    # General Tech
-    f"software engineering conference {_YEARS}",
-    f"developer conference {_YEARS}",
-    f"startup tech summit {_YEARS}",
-    f"AI conference {_YEARS}",
-    f"tech hackathon {_YEARS}",
+    # General Tech — anchored to US/Canada to avoid pulling international results
+    f"software engineering conference {_YEARS} United States",
+    f"developer conference {_YEARS} United States",
+    f"startup tech summit {_YEARS} United States",
+    f"AI conference {_YEARS} United States",
+    f"tech hackathon {_YEARS} United States OR Canada",
 ]
 
 EVENTBRITE_QUERIES = [
@@ -173,6 +173,41 @@ _TECH_TERMS = {
     "cloud", "devops", "blockchain", "fintech", "saas", "open source",
     "product", "ux", "design", "innovation",
 }
+
+# ── North America filter ──────────────────────────────────────────────────────
+# Matches unambiguous country names that indicate a non-NA event.
+# Deliberately excludes ambiguous city names (London/Dublin/Paris also exist in NA).
+_INTL_LOCATION_RE = re.compile(
+    r"\b(united kingdom|england|scotland|wales|australia|new zealand|"
+    r"germany|france|spain|italy|netherlands|sweden|norway|denmark|"
+    r"finland|switzerland|austria|portugal|ireland|poland|india|singapore|"
+    r"japan|china|hong kong|south korea|taiwan|nigeria|kenya|south africa|"
+    r"united arab emirates|brazil|argentina|colombia)\b",
+    re.IGNORECASE,
+)
+
+# ccTLDs that reliably mean a non-NA host domain
+_INTL_TLD_RE = re.compile(
+    r"https?://[^/]*\.(uk|au|nz|de|fr|es|it|nl|be|se|no|dk|fi|ch|at|pt|ie|"
+    r"pl|in|sg|jp|cn|hk|kr|tw|ng|ke|za|br|ar)(?:/|$)",
+    re.IGNORECASE,
+)
+
+
+def _is_north_america(event: dict) -> bool:
+    """
+    Return False when location + title or the URL TLD clearly points to a
+    non-North-America event.  Permissive — only rejects on strong evidence so
+    events with missing/ambiguous location are kept.
+    """
+    loc_title = f"{event.get('location', '')} {event.get('title', '')}"
+    if _INTL_LOCATION_RE.search(loc_title):
+        return False
+    url = event.get("link", "")
+    if url and _INTL_TLD_RE.search(url):
+        return False
+    return True
+
 
 # ── Conference type & exclusion terms ────────────────────────────────────────
 
@@ -379,25 +414,57 @@ def is_relevant(event: dict, strict: bool = False) -> bool:
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
-_DATE_RE = re.compile(
-    r"\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{1,2}"
-    r"(?:[–\-]\d{1,2})?(?:,?\s+\d{4})?",
-    re.IGNORECASE,
+# Ordered date patterns — first match wins.
+_DATE_PATTERNS = [
+    # "Nov 15–17, 2026" / "November 15, 2026" / "Nov 15 2026"
+    re.compile(
+        r"\b(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|"
+        r"Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)"
+        r"\.?\s+\d{1,2}(?:st|nd|rd|th)?"
+        r"(?:\s*[–\-]\s*\d{1,2}(?:st|nd|rd|th)?)?"
+        r"(?:,?\s+\d{4})?",
+        re.IGNORECASE,
+    ),
+    # ISO: 2026-10-15  or  2026/10/15
+    re.compile(r"\b(20\d\d)[.\-/](0[1-9]|1[0-2])[.\-/](0[1-9]|[12]\d|3[01])\b"),
+    # US slash: 10/15/2026
+    re.compile(r"\b(0?[1-9]|1[0-2])/(0?[1-9]|[12]\d|3[01])/(20\d\d)\b"),
+]
+
+# Primary: "City, STATE" where STATE is a US state or Canadian province abbreviation.
+_CITY_STATE_RE = re.compile(
+    r"\b([A-Z][a-zA-Z .'\-]{1,28}),\s*"
+    r"(AL|AK|AZ|AR|CA|CO|CT|DE|FL|GA|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MA|MI|MN|"
+    r"MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|OH|OK|OR|PA|RI|SC|SD|TN|TX|UT|VT|VA|"
+    r"WA|WV|WI|WY|DC|AB|BC|MB|NB|NL|NS|NT|NU|ON|PE|QC|SK|YT)\b"
 )
 
+# Fallback: word after "in / at / ·"
 _LOC_RE = re.compile(
-    r"(?:\·|\bin\b|\bat\b)\s+([A-Z][^·\n]{3,50})",
+    r"(?:\·|\bin\b|\bat\b)\s+([A-Z][a-zA-Z .'\-]{2,30}(?:,\s*[A-Z][a-zA-Z ]{1,20})?)"
 )
 
 
 def extract_date(text: str) -> str:
-    m = _DATE_RE.search(text)
-    return m.group(0).strip() if m else ""
+    for pat in _DATE_PATTERNS:
+        m = pat.search(text)
+        if m:
+            return m.group(0).strip()
+    return ""
 
 
 def extract_location(text: str) -> str:
+    # Prefer explicit City, State/Province abbreviation (most reliable)
+    m = _CITY_STATE_RE.search(text)
+    if m:
+        return f"{m.group(1).strip()}, {m.group(2)}"
+    # Fallback: preposition-based with hard length cap
     m = _LOC_RE.search(text)
-    return m.group(1).strip() if m else ""
+    if m:
+        loc = m.group(1).strip()
+        loc = re.split(r"[.!?]|\s+(?:on|–|\|)\s+", loc)[0].strip()
+        return loc[:50]
+    return ""
 
 
 def deduplicate(results: list[dict]) -> list[dict]:
@@ -1046,9 +1113,9 @@ def export_to_html(results: list[dict], filename: str) -> None:
     }}
     footer a {{ color: #888; }}
 
-    /* ── Responsive — hide less-critical columns on small screens ── */
+    /* ── Responsive — hide location column on small screens ── */
     @media (max-width: 600px) {{
-      .c-loc, .c-src {{ display: none; }}
+      .c-loc {{ display: none; }}
       .wrap {{ padding: 0.75rem 0.5rem 2rem; }}
       .controls {{ padding: 0.5rem 0.75rem; }}
     }}
@@ -1082,7 +1149,6 @@ def export_to_html(results: list[dict], filename: str) -> None:
         <th style="min-width:110px">Date</th>
         <th class="c-loc" style="min-width:150px">Location</th>
         <th style="min-width:140px">Community</th>
-        <th class="c-src" style="min-width:100px">Source</th>
       </tr>
     </thead>
     <tbody id="tbody"></tbody>
@@ -1151,7 +1217,6 @@ function render() {{
       <td>${{esc(e.date || '\u2014')}}</td>
       <td class="c-loc">${{esc(e.location || '\u2014')}}</td>
       <td>${{renderTags(e.community)}}</td>
-      <td class="c-src">${{esc(e.source)}}</td>
     </tr>`).join('');
 
   document.getElementById('count').textContent =
@@ -1266,11 +1331,15 @@ async def main() -> None:
     ]
     relevant = relevant if relevant else deduped  # safety fallback
 
-    # ── 5. Drop past events ───────────────────────────────────────────────────
-    upcoming = [e for e in relevant if is_upcoming(e)]
-    past_ct  = len(relevant) - len(upcoming)
+    # ── 5. Filter to North America ────────────────────────────────────────────
+    na_only = [e for e in relevant if _is_north_america(e)]
+    intl_ct = len(relevant) - len(na_only)
 
-    # ── 6. Tag community ──────────────────────────────────────────────────────
+    # ── 6. Drop past events ───────────────────────────────────────────────────
+    upcoming = [e for e in na_only if is_upcoming(e)]
+    past_ct  = len(na_only) - len(upcoming)
+
+    # ── 7. Tag community ──────────────────────────────────────────────────────
     for e in upcoming:
         e["community"] = classify_community(e)
 
@@ -1279,6 +1348,7 @@ async def main() -> None:
     print(f"\nRaw results        : {len(all_results)}")
     print(f"After dedup        : {len(deduped)}")
     print(f"After relevance    : {len(relevant)}")
+    print(f"Non-NA dropped     : {intl_ct}")
     print(f"Past events dropped: {past_ct}")
     print(f"Exporting          : {len(final)} upcoming events")
     if final:
