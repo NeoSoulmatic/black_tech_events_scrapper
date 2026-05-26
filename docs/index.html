@@ -5,20 +5,236 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Black Tech Events</title>
   <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #1a1a2e; color: #fff;
-      display: flex; align-items: center; justify-content: center;
-      min-height: 100vh; margin: 0; text-align: center;
+      background: #f4f5f7;
+      color: #1a1a2e;
     }
-    h1 { font-size: 2rem; margin-bottom: 0.5rem; }
-    p  { opacity: 0.6; font-size: 0.95rem; }
+
+    /* ── Header ── */
+    header {
+      background: #1a1a2e;
+      color: #fff;
+      padding: 2.5rem 1.5rem 2rem;
+      text-align: center;
+    }
+    header h1   { font-size: 2rem; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 0.3rem; }
+    header .sub { opacity: 0.7; font-size: 0.95rem; margin-bottom: 0.25rem; }
+    header .meta { font-size: 0.8rem; opacity: 0.5; }
+
+    /* ── Sticky controls bar ── */
+    .controls {
+      position: sticky; top: 0; z-index: 50;
+      background: #fff;
+      border-bottom: 1px solid #e2e5ea;
+      padding: 0.65rem 1.5rem;
+      display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    #search {
+      flex: 1; min-width: 160px;
+      padding: 0.38rem 0.75rem;
+      border: 1px solid #ced4da; border-radius: 6px;
+      font-size: 0.88rem; outline: none; color: #1a1a2e;
+    }
+    #search:focus { border-color: #1a1a2e; }
+    .filters { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+    .f {
+      padding: 0.28rem 0.7rem;
+      border: 1px solid #ced4da; border-radius: 20px;
+      background: #fff; cursor: pointer;
+      font-size: 0.8rem; font-weight: 500; color: #555;
+      transition: background 0.12s, color 0.12s, border-color 0.12s;
+    }
+    .f:hover { background: #f0f0f5; }
+    .f.on { background: #1a1a2e; color: #fff; border-color: #1a1a2e; }
+    .f[data-v="Black Tech"].on    { background: #6b4c8a; border-color: #6b4c8a; }
+    .f[data-v="Women in Tech"].on { background: #b05070; border-color: #b05070; }
+    .f[data-v="LGBTQ+ Tech"].on  { background: #2e8f68; border-color: #2e8f68; }
+    #count { margin-left: auto; font-size: 0.8rem; color: #888; white-space: nowrap; }
+
+    /* ── Table ── */
+    .wrap { padding: 1.25rem 1.5rem 3rem; }
+    table {
+      width: 100%; border-collapse: collapse;
+      background: #fff; border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+    th {
+      background: #1a1a2e; color: #fff;
+      font-size: 0.78rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      padding: 0.6rem 0.9rem; text-align: left;
+    }
+    td {
+      padding: 0.55rem 0.9rem;
+      font-size: 0.875rem;
+      border-bottom: 1px solid #f0f0f0;
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr.r-black td { background: #f8f4f8; }
+    tr.r-women td { background: #fdf6f7; }
+    tr.r-lgbtq td { background: #f2faf7; }
+    tr:hover td { filter: brightness(0.97); }
+
+    /* ── Community tags ── */
+    .tag {
+      display: inline-block; padding: 0.18rem 0.5rem;
+      border-radius: 10px; font-size: 0.72rem; font-weight: 600;
+      white-space: nowrap; margin: 0.1rem 0;
+    }
+    .t-black   { background: #c8a2c8; color: #3d1a5e; }
+    .t-women   { background: #fadadd; color: #7a1a3a; }
+    .t-lgbtq   { background: #b5ead7; color: #0f5c3a; }
+    .t-general { background: #e9ecef; color: #495057; }
+
+    a { color: #1a1a2e; text-decoration: none; font-weight: 500; }
+    a:hover { color: #4a4aff; text-decoration: underline; }
+
+    .empty {
+      text-align: center; padding: 3rem 1rem;
+      color: #888; font-size: 0.9rem;
+    }
+
+    footer {
+      text-align: center; padding: 1.5rem;
+      font-size: 0.78rem; color: #aaa;
+      border-top: 1px solid #e2e5ea;
+    }
+    footer a { color: #888; }
+
+    /* ── Responsive — hide less-critical columns on small screens ── */
+    @media (max-width: 600px) {
+      .c-loc, .c-src { display: none; }
+      .wrap { padding: 0.75rem 0.5rem 2rem; }
+      .controls { padding: 0.5rem 0.75rem; }
+    }
   </style>
 </head>
 <body>
-  <div>
-    <h1>Black Tech Events</h1>
-    <p>First scrape hasn't run yet — check back shortly.</p>
+
+<header>
+  <h1>Black Tech Events</h1>
+  <p class="sub">Upcoming tech conferences, summits &amp; hackathons</p>
+  <p class="meta">Last updated: May 26, 2026 at 23:23 UTC &middot; 27 events</p>
+</header>
+
+<div class="controls">
+  <input id="search" type="text" placeholder="Search events, locations&hellip;" />
+  <div class="filters">
+    <button class="f on" data-v="all">All</button>
+    <button class="f" data-v="Black Tech">Black Tech</button>
+    <button class="f" data-v="Women in Tech">Women in Tech</button>
+    <button class="f" data-v="LGBTQ+ Tech">LGBTQ+ Tech</button>
+    <button class="f" data-v="General">General</button>
   </div>
+  <span id="count"></span>
+</div>
+
+<div class="wrap">
+  <table id="tbl">
+    <thead>
+      <tr>
+        <th style="min-width:220px">Event</th>
+        <th style="min-width:110px">Date</th>
+        <th class="c-loc" style="min-width:150px">Location</th>
+        <th style="min-width:140px">Community</th>
+        <th class="c-src" style="min-width:100px">Source</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+  <p class="empty" id="empty" style="display:none">
+    No events match — try a different filter or search term.
+  </p>
+</div>
+
+<footer>
+  Collected weekly via Brave Search API, Eventbrite, Meetup &amp; Luma
+  &middot; <a href="https://github.com/NeoSoulmatic/black_tech_events_scrapper" target="_blank" rel="noopener">View on GitHub</a>
+</footer>
+
+<script>
+const DATA = [{"title": "The Black Blockchain Summit Tickets, Friday, September 25-Saturday, September 26 • 9 AM-6 PM | Eventbrite", "date": "September 25", "location": "Read more", "community": "Black Tech", "link": "https://www.eventbrite.com/e/the-black-blockchain-summit-tickets-1981907751436", "source": "Brave Search API"}, {"title": "Engineering the World 2026 | Powered by METLEN Tickets, Tuesday, April 28-Thursday, April 30 • 5 PM-10:30 PM | Eventbrite", "date": "", "location": "", "community": "General", "link": "https://www.eventbrite.com/e/engineering-the-world-2026-powered-by-metlen-tickets-1981954401969", "source": "Brave Search API"}, {"title": "Science & Tech Events in United States - Explore New Innovations | Eventbrite", "date": "", "location": "", "community": "General", "link": "https://www.eventbrite.com/b/united-states/science-and-tech/", "source": "Brave Search API"}, {"title": "Tech Hub Pulse Conference 2026 | Get Tickets at TECHHUBPULSE.ORG Tickets, Thursday, Mar 5 from 8 am to 8 pm | Eventbrite", "date": "", "location": "", "community": "General", "link": "https://www.eventbrite.com/e/tech-hub-pulse-conference-2026-promo-page-only-tickets-1982914903856", "source": "Brave Search API"}, {"title": "Discover Women Events & Activities in New York, NY | Eventbrite", "date": "", "location": "Tech - New York City Team TicketSave this event: Ou", "community": "Women in Tech", "link": "https://www.eventbrite.com/d/ny--new-york/women-events/", "source": "Brave Search API"}, {"title": "Women In __________ Tickets, Sun, Dec 7, 2025 at 8:00 PM | Eventbrite", "date": "", "location": "Tech SF 2026 to your collection.Share Women in Tech", "community": "Women in Tech", "link": "https://www.eventbrite.com/e/women-in--tickets-1976994000274", "source": "Brave Search API"}, {"title": "Women in Leadership Conference 2026 | By She Speaks CEO | Denver Tickets, Friday, May 15 • Starts at 10 AM | Eventbrite", "date": "", "location": "Leadership Conference is a curated leadership exper", "community": "General", "link": "https://www.eventbrite.com/e/women-in-leadership-conference-2026-by-she-speaks-ceo-denver-tickets-1987101950425", "source": "Brave Search API"}, {"title": "Women in Alliances - Dubai chapter 2026 kick off and networking Tickets, Tue, Feb 17, 2026 at 4:00 PM | Eventbrite", "date": "", "location": "Alliances - Dubai chapter 2026! It&#x27;s the perfe", "community": "General", "link": "https://www.eventbrite.com/e/women-in-alliances-dubai-chapter-2026-kick-off-and-networking-tickets-1980870085750", "source": "Brave Search API"}, {"title": "Discover Conferences in Minneapolis - Learn New Skills | Eventbrite", "date": "", "location": "", "community": "General", "link": "https://www.eventbrite.com/d/mn--minneapolis/conferences/", "source": "Brave Search API"}, {"title": "AI DevCon | 12-13 March 2026 Tickets, Thursday, March 12 • 10 AM - 6 PM | Eventbrite", "date": "March 20", "location": "NIMHANS Convention Centre - Bengaluru, Bengaluru, K", "community": "General", "link": "https://www.eventbrite.com/e/ai-devcon-12-13-march-2026-tickets-1980846162194", "source": "Brave Search API"}, {"title": "Kamp Cafe During NYC Tech Week Tickets, Monday, June 1 • 10:30 AM - 1 PM | Eventbrite", "date": "June 1, 2026", "location": "Café Bauli - New York, New York, NY. Find event and", "community": "General", "link": "https://www.eventbrite.com/e/kamp-cafe-during-nyc-tech-week-tickets-1989186549517", "source": "Brave Search API"}, {"title": "EduInfra Connect 2026: Design & Build Series Tickets, Tuesday, Mar 17 from 12:30 pm to 6:30 pm | Eventbrite", "date": "", "location": "", "community": "General", "link": "https://www.eventbrite.com/e/eduinfra-connect-2026-design-build-series-tickets-1981098317397", "source": "Brave Search API"}, {"title": "Startup Summit Kuopio 2026 Tickets, Tuesday 18 August • 12 PM - 6 PM | Eventbrite", "date": "August 20", "location": "Savonia University of Applied Sciences, Kuopio, Poh", "community": "General", "link": "https://www.eventbrite.fi/e/startup-summit-kuopio-2026-tickets-1985566924120", "source": "Brave Search API"}, {"title": "Veränderung startet mit deiner Idee, Social Hackathon 2026 Tickets, Montag, 18. Mai • 15:00 - 20:00 | Eventbrite", "date": "", "location": "", "community": "General", "link": "https://www.eventbrite.com/e/veranderung-startet-mit-deiner-idee-social-hackathon-2026-tickets-1988765122016", "source": "Brave Search API"}, {"title": "From 650 Attendees To 40,000 Strong Today — AFROTECH™ Conference Is Celebrating A Decade Of Innovation And Infinite Impact In 2026 - AfroTech | AfroTech", "date": "", "location": "", "community": "Black Tech", "link": "https://afrotech.com/afrotech-conference-2026-houston", "source": "Brave Search API"}, {"title": "Meetup #1 The Revival", "date": "Jun 2", "location": "", "community": "General", "link": "https://www.meetup.com/aztechtuesday/events/314942876/?recId=9ebb1e83-fb2b-4364-a01a-0b2bead6800b&recSource=event-search&searchId=4d4d4a80-269c-46f9-941e-28fc89727a77&eventOrigin=find_page%24inPerson", "source": "Meetup"}, {"title": "An Intro to Emerging Tech in Arizona.", "date": "Jun 3", "location": "Arizona.", "community": "General", "link": "https://www.meetup.com/etcarizona/events/314853665/?recId=9ebb1e83-fb2b-4364-a01a-0b2bead6800b&recSource=event-search&searchId=4d4d4a80-269c-46f9-941e-28fc89727a77&eventOrigin=find_page%24inPerson", "source": "Meetup"}, {"title": "Women in Tech Professional Brand Workshop", "date": "Jun 4", "location": "Tech Professional Brand Workshop", "community": "Women in Tech", "link": "https://www.meetup.com/phoenix-tech-group/events/314404611/?recId=9ebb1e83-fb2b-4364-a01a-0b2bead6800b&recSource=event-search&searchId=4d4d4a80-269c-46f9-941e-28fc89727a77&eventOrigin=find_page%24inPerson", "source": "Meetup"}, {"title": "Social Saturdays", "date": "Jun 13", "location": "", "community": "General", "link": "https://www.meetup.com/etcarizona/events/314853836/?recId=9ebb1e83-fb2b-4364-a01a-0b2bead6800b&recSource=event-search&searchId=4d4d4a80-269c-46f9-941e-28fc89727a77&eventOrigin=find_page%24inPerson", "source": "Meetup"}, {"title": "Tacos+Tech", "date": "Jun 8", "location": "Mon, Jun 8", "community": "General", "link": "https://www.meetup.com/dataphx/events/314597566/?recId=9ebb1e83-fb2b-4364-a01a-0b2bead6800b&recSource=event-search&searchId=4d4d4a80-269c-46f9-941e-28fc89727a77&eventOrigin=find_page%24inPerson", "source": "Meetup"}, {"title": "From Operator to Orchestrator", "date": "May 28", "location": "", "community": "General", "link": "https://www.meetup.com/ai-for-entrepreneurs-and-business-leaders/events/314637761/?recId=9ebb1e83-fb2b-4364-a01a-0b2bead6800b&recSource=event-search&searchId=4d4d4a80-269c-46f9-941e-28fc89727a77&eventOrigin=find_page%24inPerson", "source": "Meetup"}, {"title": "8 seats left", "date": "Jun 3", "location": "", "community": "General", "link": "https://www.meetup.com/phoenix-wbc-meetup-group/events/314957043/?recId=9ebb1e83-fb2b-4364-a01a-0b2bead6800b&recSource=event-search&searchId=4d4d4a80-269c-46f9-941e-28fc89727a77&eventOrigin=find_page%24inPerson", "source": "Meetup"}, {"title": "Premier Business Event in Arizona Beyond Networking", "date": "Jun 2", "location": "Arizona Beyond Networking", "community": "General", "link": "https://www.meetup.com/entrepreneurs-of-arizona-investors-founders-startups-ceo/events/314924754/?recId=9ebb1e83-fb2b-4364-a01a-0b2bead6800b&recSource=event-search&searchId=4d4d4a80-269c-46f9-941e-28fc89727a77&eventOrigin=find_page%24inPerson", "source": "Meetup"}, {"title": "3 seats left", "date": "Jun 2", "location": "Jun 2", "community": "General", "link": "https://www.meetup.com/entrepreneurship-alliances/events/314925104/?recId=9ebb1e83-fb2b-4364-a01a-0b2bead6800b&recSource=event-search&searchId=4d4d4a80-269c-46f9-941e-28fc89727a77&eventOrigin=find_page%24inPerson", "source": "Meetup"}, {"title": "Litecoin: The Heart of Web 3.", "date": "Jun 17", "location": "", "community": "General", "link": "https://www.meetup.com/etcarizona/events/314853749/?recId=56ab1c2e-e183-4b4a-92da-2124bf5792e8&recSource=event-search&searchId=4d4d4a80-269c-46f9-941e-28fc89727a77&eventOrigin=find_page%24inPerson", "source": "Meetup"}, {"title": "Pollack Cinema - AI Film 3 showcase event", "date": "May 28", "location": "May 28", "community": "General", "link": "https://www.meetup.com/aicollective/events/314944439/?recId=56ab1c2e-e183-4b4a-92da-2124bf5792e8&recSource=event-search&searchId=4d4d4a80-269c-46f9-941e-28fc89727a77&eventOrigin=find_page%24inPerson", "source": "Meetup"}, {"title": "Round Table", "date": "Jun 1", "location": "Mon, Jun 1", "community": "General", "link": "https://www.meetup.com/webdesignersdevelopers/events/314763270/?recId=4681b4d3-ce1a-478a-a0f6-281bce348391&recSource=event-search&searchId=e3891e9f-351c-43d4-8745-d9ba351d29ad&eventOrigin=find_page%24inPerson", "source": "Meetup"}];
+
+const TAG_CLASS = {
+  'Black Tech':    't-black',
+  'Women in Tech': 't-women',
+  'LGBTQ+ Tech':   't-lgbtq',
+  'General':       't-general',
+};
+
+function renderTags(community) {
+  return community.split(' / ')
+    .map(t => `<span class="tag ${TAG_CLASS[t] || 't-general'}">${esc(t)}</span>`)
+    .join(' ');
+}
+
+function rowClass(community) {
+  if (community.includes('Black Tech'))    return 'r-black';
+  if (community.includes('Women in Tech')) return 'r-women';
+  if (community.includes('LGBTQ+'))        return 'r-lgbtq';
+  return '';
+}
+
+function esc(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+let activeFilter = 'all';
+let searchText   = '';
+
+function render() {
+  const filtered = DATA.filter(e => {
+    const matchFilter = activeFilter === 'all' || e.community.includes(activeFilter);
+    const q = searchText.toLowerCase();
+    const matchSearch = !q ||
+      e.title.toLowerCase().includes(q) ||
+      (e.location || '').toLowerCase().includes(q) ||
+      (e.date || '').toLowerCase().includes(q) ||
+      e.community.toLowerCase().includes(q);
+    return matchFilter && matchSearch;
+  });
+
+  document.getElementById('tbody').innerHTML = filtered.map(e => `
+    <tr class="${rowClass(e.community)}">
+      <td>${e.link
+        ? `<a href="${esc(e.link)}" target="_blank" rel="noopener noreferrer">${esc(e.title)}</a>`
+        : esc(e.title)}</td>
+      <td>${esc(e.date || '—')}</td>
+      <td class="c-loc">${esc(e.location || '—')}</td>
+      <td>${renderTags(e.community)}</td>
+      <td class="c-src">${esc(e.source)}</td>
+    </tr>`).join('');
+
+  document.getElementById('count').textContent =
+    filtered.length + ' of ' + DATA.length + ' events';
+  document.getElementById('empty').style.display = filtered.length ? 'none' : '';
+  document.getElementById('tbl').style.display   = filtered.length ? ''     : 'none';
+}
+
+document.querySelectorAll('.f').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.f').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    activeFilter = btn.dataset.v;
+    render();
+  });
+});
+
+document.getElementById('search').addEventListener('input', e => {
+  searchText = e.target.value;
+  render();
+});
+
+render();
+</script>
 </body>
 </html>
