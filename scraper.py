@@ -82,16 +82,26 @@ BRAVE_SITE_QUERIES = [
     f"black in tech hackathon {_YEARS} site:eventbrite.com",
     f"hbcu tech {_YEARS} site:eventbrite.com",
     f"black founders {_YEARS} site:eventbrite.com",
+    f"colorstack {_YEARS} site:eventbrite.com",
+    f"nsbe {_YEARS} site:eventbrite.com",
     f"black tech {_YEARS} site:lu.ma",
     f"afrotech {_YEARS} site:lu.ma",
+    f"colorstack {_YEARS} site:lu.ma",
+    f"code2040 {_YEARS} site:lu.ma",
+    # Black Tech — Devpost hackathons
+    f"black tech hackathon {_YEARS} site:devpost.com",
+    f"hbcu hackathon {_YEARS} site:devpost.com",
     # Women in Tech
     f"women in tech conference {_YEARS} site:eventbrite.com",
     f"women developer summit {_YEARS} site:eventbrite.com",
     f"girls in tech {_YEARS} site:eventbrite.com",
+    f"lesbians who tech {_YEARS} site:eventbrite.com",
     f"women in tech {_YEARS} site:lu.ma",
+    f"women in tech hackathon {_YEARS} site:devpost.com",
     # LGBTQ+ Tech
     f"lgbtq tech conference {_YEARS} site:eventbrite.com",
     f"queer tech {_YEARS} site:eventbrite.com",
+    f"out in tech {_YEARS} site:eventbrite.com",
     f"lgbtq tech {_YEARS} site:lu.ma",
     # General Tech
     f"tech conference {_YEARS} site:eventbrite.com",
@@ -99,22 +109,29 @@ BRAVE_SITE_QUERIES = [
     f"startup conference {_YEARS} site:eventbrite.com",
     f"tech summit {_YEARS} site:lu.ma",
     f"developer hackathon {_YEARS} site:eventbrite.com",
+    f"diversity hackathon {_YEARS} site:devpost.com",
 ]
 
 # Tier 2 — whole-web Brave queries (broader reach, stricter post-filter applied)
 BRAVE_QUERIES = [
-    # Black Tech
+    # Black Tech — named events & orgs
     f"Black tech conference {_YEARS}",
     f"Black developer conference {_YEARS}",
     f"HBCU tech conference {_YEARS}",
     f"Black founders conference {_YEARS}",
+    f"AfroTech {_YEARS}",
+    f"BlackTechWeek {_YEARS}",
+    f"ColorStack summit {_YEARS}",
+    f"NSBE convention {_YEARS}",
+    f"Code2040 {_YEARS}",
+    f"Black in AI {_YEARS}",
     # Women in Tech
     f"women in tech conference {_YEARS}",
     f"Grace Hopper Celebration {_YEARS}",
     f"women developer summit {_YEARS}",
+    f"Lesbians Who Tech {_YEARS}",
     # LGBTQ+ Tech
     f"LGBTQ tech conference {_YEARS}",
-    f"Lesbians Who Tech {_YEARS}",
     f"Out in Tech conference {_YEARS}",
     # General Tech — anchored to US/Canada to avoid pulling international results
     f"software engineering conference {_YEARS} United States",
@@ -122,6 +139,8 @@ BRAVE_QUERIES = [
     f"startup tech summit {_YEARS} United States",
     f"AI conference {_YEARS} United States",
     f"tech hackathon {_YEARS} United States OR Canada",
+    f"MLH hackathon {_YEARS} United States",
+    f"tech week {_YEARS} United States",
 ]
 
 EVENTBRITE_QUERIES = [
@@ -130,9 +149,12 @@ EVENTBRITE_QUERIES = [
     "black developer summit",
     "afrotech",
     "hbcu tech",
+    "colorstack",
+    "nsbe conference",
     # Women in Tech
     "women in tech conference",
     "women developer",
+    "lesbians who tech",
     # LGBTQ+
     "lgbtq tech",
     "queer tech",
@@ -152,17 +174,35 @@ MEETUP_QUERIES = [
 LUMA_QUERIES = [
     "black tech",
     "afrotech",
+    "colorstack",
     "women in tech",
     "lgbtq tech",
     "tech conference",
     "developer summit",
 ]
 
+DEVPOST_QUERIES = [
+    "black tech",
+    "diversity",
+    "women tech",
+    "lgbtq",
+    "hbcu",
+]
+
+# Topics fetched from the Confs.tech open dataset (GitHub-hosted JSON)
+CONFS_TECH_TOPICS = [
+    "javascript", "python", "devops", "security", "data", "general", "ux",
+]
+_CONFS_TECH_NA_COUNTRIES = {
+    "U.S.A.", "USA", "United States", "United States of America", "Canada",
+}
+
 # ── Community signals ─────────────────────────────────────────────────────────
 
 _BLACK_SIGNALS = {
     "black", "afro", "african american", "hbcu", "melanin", "poc tech", "nsbe",
-    "afrotech", "blacktech", "black tech",
+    "afrotech", "blacktech", "black tech", "colorstack", "code2040", "black in ai",
+    "blacktechweek", "black founders",
 }
 _WOMEN_SIGNALS = {
     "women in tech", "women tech", "women developer", "girls in tech",
@@ -258,6 +298,7 @@ _EVENT_URL_RE = re.compile(
     r"|reactatl\.com"
     r"|blacktechweek\.com"
     r"|nsbe\.org"
+    r"|[a-z0-9][a-z0-9\-]*\.devpost\.com"   # individual hackathon subdomains
     r")",
     re.IGNORECASE,
 )
@@ -828,6 +869,126 @@ async def scrape_luma(page, keyword: str) -> list[dict]:
             continue
 
     return results
+
+# ── Devpost Scraper ───────────────────────────────────────────────────────────
+
+async def scrape_devpost(page, keyword: str) -> list[dict]:
+    """Scrape Devpost hackathon listings — the primary platform for in-person hackathons."""
+    results = []
+    print(f"  [Devpost] {keyword}")
+    url = (
+        f"https://devpost.com/hackathons"
+        f"?search={keyword.replace(' ', '+')}"
+        f"&challenge_type[]=in-person"
+        f"&order_by=recently-added"
+    )
+    try:
+        await page.goto(url, wait_until="domcontentloaded", timeout=20000)
+    except Exception:
+        return results
+
+    await page.wait_for_timeout(3000)
+
+    # Primary card selector confirmed by scraper research
+    cards = page.locator("article.challenge-listing")
+    card_count = await cards.count()
+
+    if card_count == 0:
+        # Fallback: any individual hackathon subdomain links on the page
+        links = page.locator("a[href*='.devpost.com']")
+        for i in range(min(await links.count(), 20)):
+            lnk = links.nth(i)
+            try:
+                href  = await lnk.get_attribute("href") or ""
+                if not href or "devpost.com/hackathons" in href:
+                    continue
+                text  = (await lnk.inner_text()).strip()
+                lines = [l.strip() for l in text.splitlines() if l.strip()]
+                if not lines:
+                    continue
+                full_text = " ".join(lines)
+                results.append({
+                    "title":    lines[0],
+                    "date":     extract_date(full_text),
+                    "location": extract_location(full_text),
+                    "link":     href.split("?")[0],
+                    "source":   "Devpost",
+                    "query":    keyword,
+                    "snippet":  full_text[:300],
+                })
+            except Exception:
+                continue
+        return results
+
+    for i in range(min(card_count, 20)):
+        card = cards.nth(i)
+        try:
+            title_el = card.locator("h2, h3, .title, [class*='title']").first
+            title    = (await title_el.inner_text()).strip() if await title_el.count() > 0 else ""
+
+            link_el  = card.locator("a[href*='.devpost.com']").first
+            href     = (await link_el.get_attribute("href") or "") if await link_el.count() > 0 else ""
+
+            date_el  = card.locator("span.value.date-range, time, [class*='date']").first
+            date_text = (await date_el.inner_text()).strip() if await date_el.count() > 0 else ""
+
+            full_text = (await card.inner_text()).strip()
+
+            if title:
+                results.append({
+                    "title":    title,
+                    "date":     date_text or extract_date(full_text),
+                    "location": extract_location(full_text),
+                    "link":     href.split("?")[0] if href else "",
+                    "source":   "Devpost",
+                    "query":    keyword,
+                    "snippet":  full_text[:300],
+                })
+        except Exception:
+            continue
+
+    return results
+
+
+# ── Confs.tech Fetcher ────────────────────────────────────────────────────────
+
+def fetch_confs_tech(year: int) -> list[dict]:
+    """
+    Pull conference data from the Confs.tech open dataset (GitHub-hosted JSON).
+    No scraping — clean structured data, filtered to North America.
+    """
+    results = []
+    base = (
+        "https://raw.githubusercontent.com/tech-conferences/conference-data"
+        f"/main/conferences/{year}"
+    )
+    for topic in CONFS_TECH_TOPICS:
+        try:
+            resp = requests.get(f"{base}/{topic}.json", timeout=10)
+            if resp.status_code != 200:
+                continue
+            for conf in resp.json():
+                if conf.get("online"):
+                    continue
+                country = conf.get("country", "")
+                if country and country not in _CONFS_TECH_NA_COUNTRIES:
+                    continue
+                city  = conf.get("city", "")
+                state = conf.get("stateProvince", "") or country
+                loc   = f"{city}, {state}".strip(", ") if city else state
+                results.append({
+                    "title":    conf.get("name", ""),
+                    "date":     conf.get("startDate", ""),
+                    "location": loc,
+                    "link":     conf.get("url", ""),
+                    "source":   "Confs.tech",
+                    "query":    topic,
+                    "snippet":  conf.get("name", ""),
+                })
+        except Exception as exc:
+            print(f"    [Confs.tech] {topic}/{year}: {exc}")
+    return results
+
 
 # ── Excel Export ──────────────────────────────────────────────────────────────
 
@@ -1406,7 +1567,20 @@ async def main() -> None:
             all_results.extend(hits)
             await page.wait_for_timeout(2000)
 
+        print("\n── Devpost ─────────────────────────────────────────")
+        for keyword in DEVPOST_QUERIES:
+            hits = await scrape_devpost(page, keyword)
+            all_results.extend(hits)
+            await page.wait_for_timeout(2000)
+
         await browser.close()
+
+    # ── 2b. Confs.tech (no browser — plain HTTP JSON fetch) ───────────────────
+    print("\n── Confs.tech ──────────────────────────────────────")
+    for year in (_YEAR, _YEAR + 1):
+        hits = fetch_confs_tech(year)
+        all_results.extend(hits)
+        print(f"  → {len(hits)} results for {year}")
 
     # ── 3. Deduplicate ────────────────────────────────────────────────────────
     deduped = deduplicate(all_results)
