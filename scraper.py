@@ -32,6 +32,7 @@ import asyncio
 import json
 import os
 import re
+import sys
 from datetime import date, datetime
 from pathlib import Path
 
@@ -59,6 +60,11 @@ SHEET_SCOPES = [
     "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/drive",
 ]
+
+# ── Event store ───────────────────────────────────────────────────────────────
+EVENT_STORE_PATH = Path("data/events.json")
+EVENT_EXPIRY_DAYS = 90   # drop events not seen for this many days
+NEW_BADGE_DAYS   = 7     # show "NEW" badge if first_seen within this window
 
 # ── Search queries ────────────────────────────────────────────────────────────
 # Focused on conference/summit/hackathon scale events — AfroTech / ReactATL tier.
@@ -470,11 +476,74 @@ def extract_location(text: str) -> str:
 def deduplicate(results: list[dict]) -> list[dict]:
     seen, unique = set(), []
     for r in results:
-        key = r["title"].lower().strip()
+        # Prefer URL (strip query string) as the canonical dedup key; fall back to title
+        key = r.get("link", "").split("?")[0].lower() or r["title"].lower().strip()
         if key and key not in seen:
             seen.add(key)
             unique.append(r)
     return unique
+
+
+# ── Persistent event store ────────────────────────────────────────────────────
+
+def load_event_store() -> dict:
+    if EVENT_STORE_PATH.exists():
+        try:
+            return json.loads(EVENT_STORE_PATH.read_text(encoding="utf-8"))
+        except Exception:
+            return {}
+    return {}
+
+
+def merge_into_store(store: dict, events: list[dict], today: str) -> dict:
+    for event in events:
+        key = event.get("link", "").split("?")[0].lower() or event.get("title", "").lower().strip()
+        if not key:
+            continue
+        if key in store:
+            store[key]["last_seen"]   = today
+            store[key]["appearances"] = store[key].get("appearances", 1) + 1
+            # Overwrite community (classifier may improve over time)
+            if event.get("community"):
+                store[key]["community"] = event["community"]
+            # Fill in missing fields if we have better data now
+            for field in ("date", "location", "title"):
+                if event.get(field) and not store[key].get(field):
+                    store[key][field] = event[field]
+        else:
+            store[key] = {**event, "first_seen": today, "last_seen": today, "appearances": 1}
+    return store
+
+
+def expire_past_events(store: dict, today: str) -> dict:
+    today_date = date.fromisoformat(today)
+    active = {}
+    for key, event in store.items():
+        last_seen    = date.fromisoformat(event.get("last_seen", today))
+        days_unseen  = (today_date - last_seen).days
+        parsed_date  = _parse_event_date(event.get("date", ""))
+        if days_unseen > EVENT_EXPIRY_DAYS:
+            continue
+        if parsed_date and parsed_date < today_date and days_unseen > 7:
+            continue
+        active[key] = event
+    return active
+
+
+def save_event_store(store: dict) -> None:
+    EVENT_STORE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    EVENT_STORE_PATH.write_text(
+        json.dumps(store, ensure_ascii=False, indent=2, sort_keys=True),
+        encoding="utf-8",
+    )
+
+
+def store_to_list(store: dict) -> list[dict]:
+    events = list(store.values())
+    def _sort_key(e: dict) -> date:
+        parsed = _parse_event_date(e.get("date", ""))
+        return parsed or date(9999, 12, 31)
+    return sorted(events, key=_sort_key)
 
 # ── Brave Search API ──────────────────────────────────────────────────────────
 
@@ -982,12 +1051,13 @@ def export_to_html(results: list[dict], filename: str) -> None:
 
     events_data = [
         {
-            "title":     e.get("title", ""),
-            "date":      e.get("date", ""),
-            "location":  e.get("location", ""),
-            "community": e.get("community", "General"),
-            "link":      e.get("link", ""),
-            "source":    e.get("source", ""),
+            "title":      e.get("title", ""),
+            "date":       e.get("date", ""),
+            "location":   e.get("location", ""),
+            "community":  e.get("community", "General"),
+            "link":       e.get("link", ""),
+            "source":     e.get("source", ""),
+            "first_seen": e.get("first_seen", ""),
         }
         for e in results
     ]
@@ -1106,6 +1176,13 @@ def export_to_html(results: list[dict], filename: str) -> None:
       color: #888; font-size: 0.9rem;
     }}
 
+    .new-badge {{
+      display: inline-block; padding: 0.1rem 0.42rem;
+      border-radius: 4px; font-size: 0.64rem; font-weight: 700;
+      background: #22c55e; color: #fff; vertical-align: middle;
+      margin-left: 0.35rem; letter-spacing: 0.04em;
+    }}
+
     footer {{
       text-align: center; padding: 1.5rem;
       font-size: 0.78rem; color: #aaa;
@@ -1194,6 +1271,12 @@ function esc(s) {{
     .replace(/"/g, '&quot;');
 }}
 
+const TODAY_ISO = new Date().toISOString().slice(0, 10);
+function isNew(firstSeen) {{
+  if (!firstSeen) return false;
+  return (new Date(TODAY_ISO) - new Date(firstSeen)) / 86400000 <= {NEW_BADGE_DAYS};
+}}
+
 let activeFilter = 'all';
 let searchText   = '';
 
@@ -1213,7 +1296,7 @@ function render() {{
     <tr class="${{rowClass(e.community)}}">
       <td>${{e.link
         ? `<a href="${{esc(e.link)}}" target="_blank" rel="noopener noreferrer">${{esc(e.title)}}</a>`
-        : esc(e.title)}}</td>
+        : esc(e.title)}}${{isNew(e.first_seen) ? ' <span class="new-badge">NEW</span>' : ''}}</td>
       <td>${{esc(e.date || '\u2014')}}</td>
       <td class="c-loc">${{esc(e.location || '\u2014')}}</td>
       <td>${{renderTags(e.community)}}</td>
@@ -1251,6 +1334,11 @@ render();
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 async def main() -> None:
+    # ── 0. Load persistent event store ───────────────────────────────────────
+    today = _TODAY.isoformat()
+    store = load_event_store()
+    store_count_before = len(store)
+
     all_results: list[dict] = []
 
     # ── 1. Brave Search API (no browser needed, whole-web coverage) ──────────
@@ -1350,7 +1438,7 @@ async def main() -> None:
     print(f"After relevance    : {len(relevant)}")
     print(f"Non-NA dropped     : {intl_ct}")
     print(f"Past events dropped: {past_ct}")
-    print(f"Exporting          : {len(final)} upcoming events")
+    print(f"Found this run     : {len(final)} upcoming events")
     if final:
         comm_summary: dict[str, int] = {}
         for e in final:
@@ -1358,25 +1446,34 @@ async def main() -> None:
                 comm_summary[tag] = comm_summary.get(tag, 0) + 1
         for tag, cnt in sorted(comm_summary.items()):
             print(f"  {tag:<20}: {cnt}")
+    else:
+        print("\nWARNING: No events found this run.", file=sys.stderr)
 
-    if not final:
-        print("\nNo events found. Check your API keys / network and try again.")
-        return
+    # ── 8. Merge into persistent store, expire stale entries, save ───────────
+    store = merge_into_store(store, final, today)
+    store = expire_past_events(store, today)
+    save_event_store(store)
+    print(f"Event store        : {store_count_before} → {len(store)} events")
 
-    # ── 4. Export ─────────────────────────────────────────────────────────────
+    if not store:
+        print("ERROR: Event store is empty — nothing to export.", file=sys.stderr)
+        raise SystemExit(1)
+
+    # ── 9. Export from full store (includes events from previous runs) ────────
+    export_list  = store_to_list(store)
     timestamp    = datetime.now().strftime("%Y%m%d_%H%M%S")
     excel_file   = f"black_tech_events_{timestamp}.xlsx"
-    export_to_excel(final, excel_file)
-    export_to_html(final, "docs/index.html")
+    export_to_excel(export_list, excel_file)
+    export_to_html(export_list, "docs/index.html")
 
     if ENABLE_SHEETS:
         sheet_name = f"Black Tech Events {datetime.now().strftime('%Y-%m-%d')}"
         try:
-            export_to_sheets(final, sheet_name)
+            export_to_sheets(export_list, sheet_name)
         except Exception as exc:
             print(f"Sheets export failed: {exc}")
 
-    print(f"\nDone! {len(final)} events exported to {excel_file}")
+    print(f"\nDone! {len(export_list)} events in store, exported to {excel_file}")
 
 
 if __name__ == "__main__":
