@@ -47,8 +47,11 @@ load_dotenv()
 
 # ── Configuration ─────────────────────────────────────────────────────────────
 
-BRAVE_API_KEY = os.getenv("BRAVE_API_KEY", "")
-ENABLE_SHEETS = os.getenv("ENABLE_GOOGLE_SHEETS", "false").lower() == "true"
+BRAVE_API_KEY      = os.getenv("BRAVE_API_KEY", "")
+ENABLE_SHEETS      = os.getenv("ENABLE_GOOGLE_SHEETS", "false").lower() == "true"
+SUPABASE_URL       = os.getenv("SUPABASE_URL", "")
+SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY", "")
+SUPABASE_ANON_KEY  = os.getenv("SUPABASE_ANON_KEY", "")
 
 # Auth method for Google Sheets: "oauth" or "service_account"
 SHEETS_AUTH_METHOD   = "oauth"
@@ -526,8 +529,67 @@ def deduplicate(results: list[dict]) -> list[dict]:
 
 
 # ── Persistent event store ────────────────────────────────────────────────────
+# Uses Supabase when SUPABASE_URL + SUPABASE_SERVICE_KEY are set;
+# falls back to data/events.json for local development without credentials.
+
+def _supabase_client():
+    """Return an authenticated Supabase client, or None if not configured."""
+    if not (SUPABASE_URL and SUPABASE_SERVICE_KEY):
+        return None
+    try:
+        from supabase import create_client
+        return create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+    except Exception as exc:
+        print(f"[Supabase] client init failed: {exc}", file=sys.stderr)
+        return None
+
+
+def _event_to_row(event: dict, today: str) -> dict:
+    """Convert a scraper event dict to a Supabase table row."""
+    parsed = _parse_event_date(event.get("date", ""))
+    return {
+        "url":          event.get("link", "").split("?")[0].lower(),
+        "title":        event.get("title", ""),
+        "date_text":    event.get("date", "") or None,
+        "date_parsed":  parsed.isoformat() if parsed else None,
+        "location":     event.get("location", "") or None,
+        "community":    event.get("community", "General"),
+        "source":       event.get("source", ""),
+        "search_query": event.get("query", "") or None,
+        "first_seen":   event.get("first_seen", today),
+        "last_seen":    today,
+        "appearances":  event.get("appearances", 1),
+        "is_active":    True,
+    }
+
 
 def load_event_store() -> dict:
+    """Load the event store — from Supabase if configured, else from JSON."""
+    sb = _supabase_client()
+    if sb:
+        try:
+            resp = sb.table("events").select("*").execute()
+            store = {}
+            for row in resp.data:
+                key = row["url"]
+                store[key] = {
+                    "title":      row["title"],
+                    "date":       row["date_text"] or "",
+                    "location":   row["location"] or "",
+                    "community":  row["community"],
+                    "link":       row["url"],
+                    "source":     row["source"],
+                    "query":      row.get("search_query", ""),
+                    "first_seen": row["first_seen"],
+                    "last_seen":  row["last_seen"],
+                    "appearances": row["appearances"],
+                }
+            print(f"[Supabase] loaded {len(store)} events from database")
+            return store
+        except Exception as exc:
+            print(f"[Supabase] load failed, falling back to JSON: {exc}", file=sys.stderr)
+
+    # JSON fallback
     if EVENT_STORE_PATH.exists():
         try:
             return json.loads(EVENT_STORE_PATH.read_text(encoding="utf-8"))
@@ -544,10 +606,8 @@ def merge_into_store(store: dict, events: list[dict], today: str) -> dict:
         if key in store:
             store[key]["last_seen"]   = today
             store[key]["appearances"] = store[key].get("appearances", 1) + 1
-            # Overwrite community (classifier may improve over time)
             if event.get("community"):
                 store[key]["community"] = event["community"]
-            # Fill in missing fields if we have better data now
             for field in ("date", "location", "title"):
                 if event.get(field) and not store[key].get(field):
                     store[key][field] = event[field]
@@ -572,6 +632,25 @@ def expire_past_events(store: dict, today: str) -> dict:
 
 
 def save_event_store(store: dict) -> None:
+    """Persist the store — to Supabase if configured, always to JSON as backup."""
+    sb = _supabase_client()
+    if sb:
+        rows = [_event_to_row(event, event.get("last_seen", str(date.today()))) for event in store.values()]
+        try:
+            # Upsert in batches of 200 to stay within Supabase request limits
+            batch_size = 200
+            for i in range(0, len(rows), batch_size):
+                batch = rows[i : i + batch_size]
+                sb.table("events").upsert(batch, on_conflict="url").execute()
+            print(f"[Supabase] upserted {len(rows)} events")
+
+            # Mark events no longer in the active store as inactive
+            active_urls = [r["url"] for r in rows]
+            sb.table("events").update({"is_active": False}).not_.in_("url", active_urls).execute()
+        except Exception as exc:
+            print(f"[Supabase] save failed: {exc}", file=sys.stderr)
+
+    # Always write JSON backup (committed to git, useful for local dev + audit)
     EVENT_STORE_PATH.parent.mkdir(parents=True, exist_ok=True)
     EVENT_STORE_PATH.write_text(
         json.dumps(store, ensure_ascii=False, indent=2, sort_keys=True),
@@ -1227,6 +1306,9 @@ def export_to_html(results: list[dict], filename: str) -> None:
         "</script>", r"<\/script>"
     )
 
+    sb_url  = SUPABASE_URL
+    sb_anon = SUPABASE_ANON_KEY
+
     updated  = datetime.now().strftime("%B %d, %Y at %H:%M UTC")
     count    = len(results)
     repo     = os.getenv("GITHUB_REPOSITORY", "")
@@ -1344,6 +1426,61 @@ def export_to_html(results: list[dict], filename: str) -> None:
       margin-left: 0.35rem; letter-spacing: 0.04em;
     }}
 
+    /* ── Loading ── */
+    #loading {{
+      text-align: center; padding: 4rem 1rem;
+      color: #888; font-size: 0.9rem;
+    }}
+    .spinner {{
+      display: inline-block; width: 1.4rem; height: 1.4rem;
+      border: 3px solid #ddd; border-top-color: #1a1a2e;
+      border-radius: 50%; animation: spin 0.7s linear infinite;
+      vertical-align: middle; margin-right: 0.5rem;
+    }}
+    @keyframes spin {{ to {{ transform: rotate(360deg); }} }}
+
+    /* ── Suggest button ── */
+    .btn-suggest {{
+      padding: 0.28rem 0.8rem;
+      border: 1px solid #1a1a2e; border-radius: 20px;
+      background: #1a1a2e; cursor: pointer;
+      font-size: 0.8rem; font-weight: 600; color: #fff;
+      transition: opacity 0.12s; white-space: nowrap;
+    }}
+    .btn-suggest:hover {{ opacity: 0.85; }}
+
+    /* ── Suggest modal ── */
+    .modal-overlay {{
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.45); align-items: center; justify-content: center;
+    }}
+    .modal-overlay.open {{ display: flex; }}
+    .modal {{
+      background: #fff; border-radius: 10px; padding: 1.75rem;
+      width: min(480px, 92vw); box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    }}
+    .modal h2 {{ font-size: 1.1rem; margin-bottom: 1rem; color: #1a1a2e; }}
+    .modal label {{ display: block; font-size: 0.8rem; font-weight: 600; color: #444; margin-bottom: 0.2rem; }}
+    .modal input, .modal select, .modal textarea {{
+      width: 100%; padding: 0.42rem 0.65rem;
+      border: 1px solid #ced4da; border-radius: 6px;
+      font-size: 0.875rem; margin-bottom: 0.85rem;
+      font-family: inherit; color: #1a1a2e;
+    }}
+    .modal textarea {{ resize: vertical; min-height: 70px; }}
+    .modal-actions {{ display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 0.25rem; }}
+    .btn-cancel {{
+      padding: 0.38rem 1rem; border: 1px solid #ced4da; border-radius: 6px;
+      background: #fff; cursor: pointer; font-size: 0.875rem;
+    }}
+    .btn-submit {{
+      padding: 0.38rem 1.2rem; border: none; border-radius: 6px;
+      background: #1a1a2e; color: #fff; cursor: pointer;
+      font-size: 0.875rem; font-weight: 600;
+    }}
+    .btn-submit:disabled {{ opacity: 0.55; cursor: not-allowed; }}
+    #suggest-msg {{ font-size: 0.82rem; margin-top: 0.5rem; text-align: center; }}
+
     footer {{
       text-align: center; padding: 1.5rem;
       font-size: 0.78rem; color: #aaa;
@@ -1377,6 +1514,7 @@ def export_to_html(results: list[dict], filename: str) -> None:
     <button class="f" data-v="General">General</button>
   </div>
   <span id="count"></span>
+  <button class="btn-suggest" id="btn-suggest">+ Suggest an Event</button>
 </div>
 
 <div class="wrap">
@@ -1396,13 +1534,53 @@ def export_to_html(results: list[dict], filename: str) -> None:
   </p>
 </div>
 
+<div id="loading" style="display:none">
+  <span class="spinner"></span>Loading events&hellip;
+</div>
+
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <h2 id="modal-title">Suggest an Event</h2>
+    <label for="s-title">Event name *</label>
+    <input id="s-title" type="text" placeholder="e.g. AfroTech 2026" maxlength="200" />
+    <label for="s-url">Event URL *</label>
+    <input id="s-url" type="url" placeholder="https://…" maxlength="500" />
+    <label for="s-date">Date (approximate is fine)</label>
+    <input id="s-date" type="text" placeholder="e.g. Nov 15, 2026" maxlength="100" />
+    <label for="s-location">Location</label>
+    <input id="s-location" type="text" placeholder="e.g. Atlanta, GA" maxlength="150" />
+    <label for="s-community">Community</label>
+    <select id="s-community">
+      <option value="Black Tech">Black Tech</option>
+      <option value="Women in Tech">Women in Tech</option>
+      <option value="LGBTQ+ Tech">LGBTQ+ Tech</option>
+      <option value="General">General</option>
+    </select>
+    <label for="s-notes">Anything else we should know?</label>
+    <textarea id="s-notes" placeholder="Optional notes…" maxlength="500"></textarea>
+    <div class="modal-actions">
+      <button class="btn-cancel" id="btn-cancel">Cancel</button>
+      <button class="btn-submit" id="btn-submit">Submit</button>
+    </div>
+    <p id="suggest-msg"></p>
+  </div>
+</div>
+
 <footer>
-  Collected weekly via Brave Search API, Eventbrite, Meetup &amp; Luma
+  Collected weekly via Brave Search API, Eventbrite, Meetup, Luma &amp; Devpost
   {gh_link}
 </footer>
 
 <script>
-const DATA = {events_json};
+// Inline snapshot — always available as an instant fallback
+const INLINE_DATA = {events_json};
+
+// Supabase config (baked in at scrape time; empty strings = no Supabase)
+const SB_URL  = "{sb_url}";
+const SB_ANON = "{sb_anon}";
+
+// Active dataset — starts with inline data, replaced by live fetch if configured
+let DATA = INLINE_DATA;
 
 const TAG_CLASS = {{
   'Black Tech':    't-black',
@@ -1483,7 +1661,93 @@ document.getElementById('search').addEventListener('input', e => {{
   render();
 }});
 
-render();
+// ── Supabase live fetch ───────────────────────────────────────────────────────
+async function loadFromSupabase() {{
+  if (!SB_URL || !SB_ANON) return false;
+  const url = SB_URL + '/rest/v1/events'
+    + '?is_active=eq.true'
+    + '&order=date_parsed.asc.nullslast'
+    + '&select=title,date_text,location,community,url,first_seen';
+  try {{
+    const resp = await fetch(url, {{
+      headers: {{ 'apikey': SB_ANON, 'Authorization': 'Bearer ' + SB_ANON }},
+    }});
+    if (!resp.ok) return false;
+    const rows = await resp.json();
+    DATA = rows.map(r => ({{
+      title:      r.title      || '',
+      date:       r.date_text  || '',
+      location:   r.location   || '',
+      community:  r.community  || 'General',
+      link:       r.url        || '',
+      first_seen: r.first_seen || '',
+    }}));
+    return true;
+  }} catch {{ return false; }}
+}}
+
+// ── Suggest an Event ──────────────────────────────────────────────────────────
+const overlay   = document.getElementById('modal-overlay');
+const suggestMsg = document.getElementById('suggest-msg');
+
+document.getElementById('btn-suggest').addEventListener('click', () => {{
+  overlay.classList.add('open');
+  suggestMsg.textContent = '';
+}});
+document.getElementById('btn-cancel').addEventListener('click', () => overlay.classList.remove('open'));
+overlay.addEventListener('click', e => {{ if (e.target === overlay) overlay.classList.remove('open'); }});
+
+document.getElementById('btn-submit').addEventListener('click', async () => {{
+  const title = document.getElementById('s-title').value.trim();
+  const url   = document.getElementById('s-url').value.trim();
+  if (!title || !url) {{ suggestMsg.textContent = 'Event name and URL are required.'; suggestMsg.style.color = '#c00'; return; }}
+  if (!SB_URL || !SB_ANON) {{ suggestMsg.textContent = 'Submissions not yet configured. Try again soon!'; return; }}
+
+  const btn = document.getElementById('btn-submit');
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+  try {{
+    const resp = await fetch(SB_URL + '/rest/v1/suggested_events', {{
+      method: 'POST',
+      headers: {{
+        'apikey': SB_ANON,
+        'Authorization': 'Bearer ' + SB_ANON,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal',
+      }},
+      body: JSON.stringify({{
+        title,
+        url,
+        date_text: document.getElementById('s-date').value.trim() || null,
+        location:  document.getElementById('s-location').value.trim() || null,
+        community: document.getElementById('s-community').value,
+        notes:     document.getElementById('s-notes').value.trim() || null,
+      }}),
+    }});
+    if (resp.ok || resp.status === 201) {{
+      suggestMsg.textContent = '✓ Thanks! We\'ll review it shortly.';
+      suggestMsg.style.color = '#22c55e';
+      ['s-title','s-url','s-date','s-location','s-notes'].forEach(id => document.getElementById(id).value = '');
+    }} else {{
+      suggestMsg.textContent = 'Something went wrong — please try again.';
+      suggestMsg.style.color = '#c00';
+    }}
+  }} catch {{ suggestMsg.textContent = 'Network error — please try again.'; suggestMsg.style.color = '#c00'; }}
+  btn.disabled = false;
+  btn.textContent = 'Submit';
+}});
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+(async () => {{
+  // Show inline data immediately for instant paint, then try live fetch
+  render();
+  if (SB_URL && SB_ANON) {{
+    document.getElementById('loading').style.display = 'block';
+    const ok = await loadFromSupabase();
+    document.getElementById('loading').style.display = 'none';
+    if (ok) render();
+  }}
+}})();
 </script>
 </body>
 </html>"""
