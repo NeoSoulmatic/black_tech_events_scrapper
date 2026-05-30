@@ -539,7 +539,7 @@ def save_event_store(store: dict) -> None:
 
 
 def store_to_list(store: dict) -> list[dict]:
-    events = list(store.values())
+    events = [e for e in store.values() if is_upcoming(e)]
     def _sort_key(e: dict) -> date:
         parsed = _parse_event_date(e.get("date", ""))
         return parsed or date(9999, 12, 31)
