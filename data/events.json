@@ -1,7 +1,7 @@
 {
   "https://afrotech.com/afrotech-conference-2026-houston": {
     "_tier": "web",
-    "appearances": 5,
+    "appearances": 6,
     "community": "Black Tech",
     "date": "Nov. 2-6, 2026",
     "first_seen": "2026-05-30",
@@ -15,7 +15,7 @@
   },
   "https://afrotech.com/afrotech-conference-closes-out-with-focus-on-creators": {
     "_tier": "web",
-    "appearances": 5,
+    "appearances": 6,
     "community": "Black Tech",
     "date": "",
     "first_seen": "2026-05-30",
@@ -29,7 +29,7 @@
   },
   "https://afrotech.com/day-4-of-the-afrotech-conference-recap": {
     "_tier": "web",
-    "appearances": 1,
+    "appearances": 2,
     "community": "Black Tech",
     "date": "",
     "first_seen": "2026-06-22",
@@ -42,7 +42,7 @@
     "title": "Day 4 Of AFROTECH™ Conference 2025 Delivered Insights On Design, Wealth Building, And Human Connection In The Age Of AI - AfroTech"
   },
   "https://aicodingsummit.com/nyc": {
-    "appearances": 1,
+    "appearances": 2,
     "community": "General",
     "date": "2026-11-16",
     "first_seen": "2026-06-22",
@@ -54,9 +54,23 @@
     "source": "Confs.tech",
     "title": "AI Coding Summit New York Edition"
   },
+  "https://claude-ai-hackathon.devpost.com/": {
+    "_tier": "site",
+    "appearances": 1,
+    "community": "General",
+    "date": "Mar 5 – 7, 2026",
+    "first_seen": "2026-06-22",
+    "last_seen": "2026-06-22",
+    "link": "https://claude-ai-hackathon.devpost.com/",
+    "location": "Apply Here",
+    "query": "hbcu hackathon 2026 OR 2027 site:devpost.com",
+    "snippet": "Find more hackathons View the winners · Apply Here: https://luma.com/f97cjocv · Above legal age of majority in country of residence · All countries/territories, excluding standard exceptions View full rules · View schedule · Mar 5 – 7, 2026 ...",
+    "source": "Brave Search API",
+    "title": "Claude AI Hackathon - Machines of Loving Grace: Claude AI Hackathon run by Cambridge Claude Builder Club - Devpost"
+  },
   "https://convention.nsbe.org/learn/": {
     "_tier": "web",
-    "appearances": 5,
+    "appearances": 6,
     "community": "Black Tech",
     "date": "",
     "first_seen": "2026-05-30",
@@ -70,7 +84,7 @@
   },
   "https://convention.nsbe.org/nsbe-competitions-winners-and-elected-national-executive-board/": {
     "_tier": "web",
-    "appearances": 3,
+    "appearances": 4,
     "community": "Black Tech",
     "date": "",
     "first_seen": "2026-06-08",
@@ -84,7 +98,7 @@
   },
   "https://convention.nsbe.org/resources/": {
     "_tier": "web",
-    "appearances": 5,
+    "appearances": 6,
     "community": "Black Tech",
     "date": "",
     "first_seen": "2026-05-30",
@@ -98,7 +112,7 @@
   },
   "https://datahacks-2026.devpost.com/": {
     "_tier": "site",
-    "appearances": 1,
+    "appearances": 2,
     "community": "General",
     "date": "",
     "first_seen": "2026-06-22",
@@ -112,7 +126,7 @@
   },
   "https://duwithacks2026.devpost.com/": {
     "_tier": "site",
-    "appearances": 5,
+    "appearances": 6,
     "community": "Women in Tech",
     "date": "",
     "first_seen": "2026-05-30",
@@ -126,7 +140,7 @@
   },
   "https://hacklondon-2026.devpost.com/": {
     "_tier": "site",
-    "appearances": 5,
+    "appearances": 6,
     "community": "General",
     "date": "",
     "first_seen": "2026-05-30",
@@ -140,7 +154,7 @@
   },
   "https://hacktech-by-caltech-2026.devpost.com/": {
     "_tier": "site",
-    "appearances": 2,
+    "appearances": 3,
     "community": "General",
     "date": "",
     "first_seen": "2026-06-15",
@@ -168,7 +182,7 @@
   },
   "https://hackupc-2026.devpost.com/": {
     "_tier": "site",
-    "appearances": 1,
+    "appearances": 2,
     "community": "General",
     "date": "",
     "first_seen": "2026-06-22",
@@ -181,7 +195,7 @@
     "title": "HackUPC 2026: BarcelonaTech student Hackathon. 700 hackers, 36 hours of coding. Dream it. Hack it. Ship it. - Devpost"
   },
   "https://info.devpost.com/product/ai-hackathons": {
-    "appearances": 5,
+    "appearances": 6,
     "community": "General",
     "date": "",
     "first_seen": "2026-05-30",
@@ -194,7 +208,7 @@
     "title": "AI hackathons"
   },
   "https://info.devpost.com/product/devpost-for-teams": {
-    "appearances": 5,
+    "appearances": 6,
     "community": "General",
     "date": "",
     "first_seen": "2026-05-30",
@@ -207,7 +221,7 @@
     "title": "Devpost for Teams"
   },
   "https://info.devpost.com/product/public-hackathons": {
-    "appearances": 5,
+    "appearances": 6,
     "community": "General",
     "date": "",
     "first_seen": "2026-05-30",
@@ -248,7 +262,7 @@
     "title": "Tech Builders Program: Create and Conquer - Devpost"
   },
   "https://theaipivot.ai/events/anaheim-2026/home.aspx": {
-    "appearances": 5,
+    "appearances": 6,
     "community": "General",
     "date": "2026-09-25",
     "first_seen": "2026-05-30",
@@ -259,6 +273,20 @@
     "snippet": "AI Pivot Conference",
     "source": "Confs.tech",
     "title": "AI Pivot Conference"
+  },
+  "https://tidalhack-26.devpost.com/": {
+    "_tier": "site",
+    "appearances": 1,
+    "community": "General",
+    "date": "Feb 7 – 8, 2026",
+    "first_seen": "2026-06-22",
+    "last_seen": "2026-06-22",
+    "link": "https://tidalhack-26.devpost.com/",
+    "location": "Above legal age of majority in",
+    "query": "diversity hackathon 2026 OR 2027 site:devpost.com",
+    "snippet": "Find more hackathons View the winners · Above legal age of majority in country of residence · All countries/territories, excluding standard exceptions View full rules · View schedule · Feb 7 – 8, 2026 · tidalTAMU · Beginner Friendly ...",
+    "source": "Brave Search API",
+    "title": "TIDALHACK:26: Inspiring the next wave of innovative AI powered applications - Devpost"
   },
   "https://usaii-global-ai-hackathon-2026.devpost.com/resources": {
     "_tier": "site",
@@ -290,7 +318,7 @@
   },
   "https://wics-ohack-sp26-hackathon.devpost.com/": {
     "_tier": "site",
-    "appearances": 5,
+    "appearances": 6,
     "community": "General",
     "date": "",
     "first_seen": "2026-05-30",
@@ -374,7 +402,7 @@
   },
   "https://www.eventbrite.com/d/united-states/conferences/": {
     "_tier": "site",
-    "appearances": 3,
+    "appearances": 4,
     "community": "General",
     "date": "",
     "first_seen": "2026-06-01",
@@ -416,7 +444,7 @@
   },
   "https://www.eventbrite.com/e/2026-business-tech-summit-ai-implant-dentistry-tickets-1639725726789": {
     "_tier": "site",
-    "appearances": 3,
+    "appearances": 4,
     "community": "General",
     "date": "",
     "first_seen": "2026-06-08",
@@ -430,7 +458,7 @@
   },
   "https://www.eventbrite.com/e/2026-international-white-hat-conference-tickets-1985606246735": {
     "_tier": "site",
-    "appearances": 1,
+    "appearances": 2,
     "community": "General",
     "date": "",
     "first_seen": "2026-06-22",
@@ -444,7 +472,7 @@
   },
   "https://www.eventbrite.com/e/2026-tech-it-out-tomorrows-edge-advancing-beyond-5g-tickets-1989681599224": {
     "_tier": "site",
-    "appearances": 5,
+    "appearances": 6,
     "community": "General",
     "date": "July 21, 2026",
     "first_seen": "2026-05-30",
@@ -472,7 +500,7 @@
   },
   "https://www.eventbrite.com/e/aeit-2027-advances-in-education-and-information-technology-tickets-1989083711927": {
     "_tier": "site",
-    "appearances": 4,
+    "appearances": 5,
     "community": "General",
     "date": "January 22, 2027",
     "first_seen": "2026-06-01",
@@ -486,7 +514,7 @@
   },
   "https://www.eventbrite.com/e/afro-future-summit-2026-6th-annual-edition-tickets-1975187427767": {
     "_tier": "site",
-    "appearances": 5,
+    "appearances": 6,
     "community": "Black Tech",
     "date": "",
     "first_seen": "2026-05-30",
@@ -500,7 +528,7 @@
   },
   "https://www.eventbrite.com/e/ai-dev-26-x-sf-the-ai-developer-conference-tickets-1969285167949": {
     "_tier": "site",
-    "appearances": 2,
+    "appearances": 3,
     "community": "General",
     "date": "",
     "first_seen": "2026-06-15",
@@ -528,7 +556,7 @@
   },
   "https://www.eventbrite.com/e/ai-revolution-conference-tickets-1991941997135": {
     "_tier": "site",
-    "appearances": 1,
+    "appearances": 2,
     "community": "General",
     "date": "August 14, 2026",
     "first_seen": "2026-06-22",
@@ -542,7 +570,7 @@
   },
   "https://www.eventbrite.com/e/b2b-tech-asia-2026-tickets-1989811088530": {
     "_tier": "site",
-    "appearances": 5,
+    "appearances": 6,
     "community": "General",
     "date": "July 1, 2026",
     "first_seen": "2026-05-30",
@@ -636,7 +664,7 @@
   },
   "https://www.eventbrite.com/e/btw-meetup-columbus-oh-tickets-1982027865701": {
     "_tier": "site",
-    "appearances": 1,
+    "appearances": 2,
     "community": "Black Tech",
     "date": "",
     "first_seen": "2026-06-22",
@@ -650,7 +678,7 @@
   },
   "https://www.eventbrite.com/e/ceect-26-8th-international-conference-on-electrical-engineering-and-tickets-1984605119336": {
     "_tier": "site",
-    "appearances": 2,
+    "appearances": 3,
     "community": "General",
     "date": "",
     "first_seen": "2026-06-15",
@@ -692,7 +720,7 @@
   },
   "https://www.eventbrite.com/e/developerweek-new-york-hackathon-2026-registration-1985394499393": {
     "_tier": "site",
-    "appearances": 2,
+    "appearances": 3,
     "community": "General",
     "date": "May 25",
     "first_seen": "2026-06-15",
@@ -720,7 +748,7 @@
   },
   "https://www.eventbrite.com/e/emergent-conference-2026-tickets-1987107557195": {
     "_tier": "site",
-    "appearances": 1,
+    "appearances": 2,
     "community": "General",
     "date": "",
     "first_seen": "2026-06-22",
@@ -734,7 +762,7 @@
   },
   "https://www.eventbrite.com/e/engage-it-forum-january-2026-tickets-1979790607000": {
     "_tier": "site",
-    "appearances": 4,
+    "appearances": 5,
     "community": "General",
     "date": "January 20",
     "first_seen": "2026-05-30",
@@ -841,7 +869,7 @@
   },
   "https://www.eventbrite.com/e/hardweario-usa-2026-tickets-1978827160305": {
     "_tier": "site",
-    "appearances": 1,
+    "appearances": 2,
     "community": "General",
     "date": "",
     "first_seen": "2026-06-22",
@@ -896,7 +924,7 @@
   },
   "https://www.eventbrite.com/e/iciit-12th-international-conference-on-intelligent-information-technology-tickets-1990948256831": {
     "_tier": "site",
-    "appearances": 2,
+    "appearances": 3,
     "community": "General",
     "date": "",
     "first_seen": "2026-06-15",
@@ -1006,7 +1034,7 @@
   },
   "https://www.eventbrite.com/e/national-security-hackathon-tickets-1987131651261": {
     "_tier": "site",
-    "appearances": 1,
+    "appearances": 2,
     "community": "General",
     "date": "",
     "first_seen": "2026-06-22",
@@ -1072,7 +1100,7 @@
   },
   "https://www.eventbrite.com/e/open-edx-conference-2026-tickets-1967626286189": {
     "_tier": "site",
-    "appearances": 3,
+    "appearances": 4,
     "community": "General",
     "date": "",
     "first_seen": "2026-06-08",
@@ -1112,7 +1140,7 @@
   },
   "https://www.eventbrite.com/e/registration-2-for-1-women-entrepreneur-summit-2026-tickets-1989174465373": {
     "_tier": "site",
-    "appearances": 2,
+    "appearances": 3,
     "community": "General",
     "date": "",
     "first_seen": "2026-06-15",
@@ -1194,7 +1222,7 @@
   },
   "https://www.eventbrite.com/e/startup-founders-meetup-by-cedat-tickets-1989147437532": {
     "_tier": "site",
-    "appearances": 1,
+    "appearances": 2,
     "community": "General",
     "date": "June 23, 2026",
     "first_seen": "2026-06-22",
@@ -1314,7 +1342,7 @@
   },
   "https://www.eventbrite.com/e/techspo-dubai-2027-technology-expo-internet-mobile-adtech-martech-tickets-1653482824639": {
     "_tier": "site",
-    "appearances": 4,
+    "appearances": 5,
     "community": "General",
     "date": "",
     "first_seen": "2026-06-01",
@@ -1328,7 +1356,7 @@
   },
   "https://www.eventbrite.com/e/the-ai-readiness-summit-tickets-1989354243093": {
     "_tier": "site",
-    "appearances": 1,
+    "appearances": 2,
     "community": "General",
     "date": "",
     "first_seen": "2026-06-22",
@@ -1342,7 +1370,7 @@
   },
   "https://www.eventbrite.com/e/the-black-blockchain-summit-tickets-1981907751436": {
     "_tier": "site",
-    "appearances": 5,
+    "appearances": 6,
     "community": "Black Tech",
     "date": "September 25th - 26th, 2026",
     "first_seen": "2026-05-30",
@@ -1488,6 +1516,58 @@
     "source": "Meetup",
     "title": "Where is AI in 2026 and Where is it Going?"
   },
+  "https://www.meetup.com/aibuilders-sv/events/315367942/": {
+    "appearances": 1,
+    "community": "General",
+    "date": "Jul 2",
+    "first_seen": "2026-06-22",
+    "last_seen": "2026-06-22",
+    "link": "https://www.meetup.com/aibuilders-sv/events/315367942/?recId=9646d27c-6405-49e7-80b5-bf0fa419ad25&recSource=event-search&searchId=344e5096-224b-4b4c-9a76-9adeb689e261&eventOrigin=find_page%24inPerson",
+    "location": "",
+    "query": "developer conference",
+    "snippet": "The Future of Agentic Engineering and AI Workforces with Qoder\nThu, Jul 2 · 2:00 PM PDT\nby AI Builders Silicon Valley\n1 attendee",
+    "source": "Meetup",
+    "title": "The Future of Agentic Engineering and AI Workforces with Qoder"
+  },
+  "https://www.meetup.com/aibuilders-sv/events/315368819/": {
+    "appearances": 1,
+    "community": "General",
+    "date": "Jul 3",
+    "first_seen": "2026-06-22",
+    "last_seen": "2026-06-22",
+    "link": "https://www.meetup.com/aibuilders-sv/events/315368819/?recId=8a770f18-ffce-4204-a5b9-20e1905d9fa6&recSource=event-search&searchId=344e5096-224b-4b4c-9a76-9adeb689e261&eventOrigin=find_page%24inPerson",
+    "location": "",
+    "query": "developer conference",
+    "snippet": "Agent Forge Mini Hackathon: One-click Agent Deploy\nFri, Jul 3 · 2:00 PM PDT\nby AI Builders Silicon Valley\n1 attendee",
+    "source": "Meetup",
+    "title": "Agent Forge Mini Hackathon: One-click Agent Deploy"
+  },
+  "https://www.meetup.com/aittg-sfsv/events/315224831/": {
+    "appearances": 1,
+    "community": "General",
+    "date": "Jun 24",
+    "first_seen": "2026-06-22",
+    "last_seen": "2026-06-22",
+    "link": "https://www.meetup.com/aittg-sfsv/events/315224831/?recId=e687035c-b58b-4a38-aa75-99c86bb4c496&recSource=event-search&searchId=e0daa295-f508-4fc3-b5b0-080582e5647b&eventOrigin=find_page%24inPerson",
+    "location": "",
+    "query": "black tech conference",
+    "snippet": "AWS Agentic AI Summit - June Edition\nWed, Jun 24 · 4:30 PM PDT\nby SF/Bay AI Developers Group\n4.4\n11 attendees",
+    "source": "Meetup",
+    "title": "AWS Agentic AI Summit - June Edition"
+  },
+  "https://www.meetup.com/baybifx/events/315202105/": {
+    "appearances": 1,
+    "community": "General",
+    "date": "Jun 25",
+    "first_seen": "2026-06-22",
+    "last_seen": "2026-06-22",
+    "link": "https://www.meetup.com/baybifx/events/315202105/?recId=3bc59dd3-bafb-42ff-af28-e0c546ef7cb5&recSource=event-search&searchId=e0daa295-f508-4fc3-b5b0-080582e5647b&eventOrigin=find_page%24inPerson",
+    "location": "",
+    "query": "black tech conference",
+    "snippet": "Biotech Networks SF\nThu, Jun 25 · 6:00 PM PDT\nby Bay Area Bioinformatics Forum\n4.8\n9 attendees",
+    "source": "Meetup",
+    "title": "Biotech Networks SF"
+  },
   "https://www.meetup.com/central-ohio-net-developers-group-condg/events/313792136/": {
     "appearances": 2,
     "community": "General",
@@ -1500,6 +1580,19 @@
     "snippet": "Customize the IDE: Building Extensions for Visual Studio Code - Alan Barber\nThu, Jun 25 · 5:30 PM EDT\n·\nHybrid\nby Central Ohio .NET Developer's Group (CONDG)\n4.8\n7 attendees",
     "source": "Meetup",
     "title": "Customize the IDE: Building Extensions for Visual Studio Code - Alan Barber"
+  },
+  "https://www.meetup.com/clickhouse-silicon-valley-meetup-group/events/315350269/": {
+    "appearances": 1,
+    "community": "General",
+    "date": "Jul 1",
+    "first_seen": "2026-06-22",
+    "last_seen": "2026-06-22",
+    "link": "https://www.meetup.com/clickhouse-silicon-valley-meetup-group/events/315350269/?recId=8a770f18-ffce-4204-a5b9-20e1905d9fa6&recSource=event-search&searchId=344e5096-224b-4b4c-9a76-9adeb689e261&eventOrigin=find_page%24inPerson",
+    "location": "",
+    "query": "developer conference",
+    "snippet": "AI Demo Night\nWed, Jul 1 · 5:30 PM PDT\nby ClickHouse Bay Area and Silicon Valley Meetup Group\n4.8\n1 attendee",
+    "source": "Meetup",
+    "title": "AI Demo Night"
   },
   "https://www.meetup.com/des-moines-3d-printing-meetup/events/314846508/": {
     "appearances": 1,
@@ -1553,6 +1646,45 @@
     "source": "Meetup",
     "title": "AI in DevOps: Real World Practices Roundtable"
   },
+  "https://www.meetup.com/igda-silicon-valley-san-francisco/events/315237783/": {
+    "appearances": 1,
+    "community": "General",
+    "date": "Jun 25",
+    "first_seen": "2026-06-22",
+    "last_seen": "2026-06-22",
+    "link": "https://www.meetup.com/igda-silicon-valley-san-francisco/events/315237783/?recId=8a770f18-ffce-4204-a5b9-20e1905d9fa6&recSource=event-search&searchId=344e5096-224b-4b4c-9a76-9adeb689e261&eventOrigin=find_page%24inPerson",
+    "location": "",
+    "query": "developer conference",
+    "snippet": "IGDA SF @ MADE - Developer Showcase with Speaker Series\nThu, Jun 25 · 6:00 PM PDT\nby IGDA Silicon Valley & San Francisco\n4.8\n13 attendees",
+    "source": "Meetup",
+    "title": "IGDA SF @ MADE - Developer Showcase with Speaker Series"
+  },
+  "https://www.meetup.com/monthly-sf-game-development-community/events/315300520/": {
+    "appearances": 1,
+    "community": "General",
+    "date": "Jul 21",
+    "first_seen": "2026-06-22",
+    "last_seen": "2026-06-22",
+    "link": "https://www.meetup.com/monthly-sf-game-development-community/events/315300520/?recId=9646d27c-6405-49e7-80b5-bf0fa419ad25&recSource=event-search&searchId=344e5096-224b-4b4c-9a76-9adeb689e261&eventOrigin=find_page%24inPerson",
+    "location": "",
+    "query": "developer conference",
+    "snippet": "Legal Essentials for Game Developers: Privacy, Safety & IP\nTue, Jul 21 · 5:30 PM PDT\nby SF Game Development\n4.6\n44 attendees",
+    "source": "Meetup",
+    "title": "Legal Essentials for Game Developers: Privacy, Safety & IP"
+  },
+  "https://www.meetup.com/noisebridge/events/314029985/": {
+    "appearances": 1,
+    "community": "General",
+    "date": "Jun 22",
+    "first_seen": "2026-06-22",
+    "last_seen": "2026-06-22",
+    "link": "https://www.meetup.com/noisebridge/events/314029985/?recId=9646d27c-6405-49e7-80b5-bf0fa419ad25&recSource=event-search&searchId=344e5096-224b-4b4c-9a76-9adeb689e261&eventOrigin=find_page%24inPerson",
+    "location": "Jun",
+    "query": "developer conference",
+    "snippet": "All things software infrastructure\nEvery Mon · Jun 22 · 7:00 PM PDT\nby Noisebridge Hackerspace\n4.8\n3 attendees",
+    "source": "Meetup",
+    "title": "All things software infrastructure"
+  },
   "https://www.meetup.com/ohio-north-database-training/events/314868390/": {
     "appearances": 2,
     "community": "General",
@@ -1565,6 +1697,19 @@
     "snippet": "SQL Server 2025: The Developer’s Revolution\nTue, Jun 2 · 5:00 PM EDT\n·\nHybrid\nby Ohio North Data Training\n4.7\n28 attendees",
     "source": "Meetup",
     "title": "SQL Server 2025: The Developer’s Revolution"
+  },
+  "https://www.meetup.com/openoakland/events/315320275/": {
+    "appearances": 1,
+    "community": "General",
+    "date": "Jul 7",
+    "first_seen": "2026-06-22",
+    "last_seen": "2026-06-22",
+    "link": "https://www.meetup.com/openoakland/events/315320275/?recId=3bc59dd3-bafb-42ff-af28-e0c546ef7cb5&recSource=event-search&searchId=e0daa295-f508-4fc3-b5b0-080582e5647b&eventOrigin=find_page%24inPerson",
+    "location": "",
+    "query": "black tech conference",
+    "snippet": "OpenOakland - Civic Tech for the Community\nTue, Jul 7 · 6:30 PM PDT\nby OpenOakland\n4.8\n6 attendees",
+    "source": "Meetup",
+    "title": "OpenOakland - Civic Tech for the Community"
   },
   "https://www.meetup.com/producttank-des-moines-ames/events/315016710/": {
     "appearances": 1,
@@ -1579,6 +1724,19 @@
     "source": "Meetup",
     "title": "Life After Launch: Everything I Learned About Product After Leaving"
   },
+  "https://www.meetup.com/producttank-sf/events/314860008/": {
+    "appearances": 1,
+    "community": "General",
+    "date": "Jun 27",
+    "first_seen": "2026-06-22",
+    "last_seen": "2026-06-22",
+    "link": "https://www.meetup.com/producttank-sf/events/314860008/?recId=8a770f18-ffce-4204-a5b9-20e1905d9fa6&recSource=event-search&searchId=344e5096-224b-4b4c-9a76-9adeb689e261&eventOrigin=find_page%24inPerson",
+    "location": "",
+    "query": "developer conference",
+    "snippet": "Hackathon: Humanizing The Prototype\nSat, Jun 27 · 10:30 AM PDT\nby ProductTank SF\n4.7\n37 attendees",
+    "source": "Meetup",
+    "title": "Hackathon: Humanizing The Prototype"
+  },
   "https://www.meetup.com/pyowa-iowa-python-user-group/events/315056917/": {
     "appearances": 1,
     "community": "General",
@@ -1592,9 +1750,191 @@
     "source": "Meetup",
     "title": "Tic-Tac-Toe Coding Competition"
   },
+  "https://www.meetup.com/really-fun-things-to-do-in-san-francisco/events/314495594/": {
+    "appearances": 1,
+    "community": "General",
+    "date": "Jun 24",
+    "first_seen": "2026-06-22",
+    "last_seen": "2026-06-22",
+    "link": "https://www.meetup.com/really-fun-things-to-do-in-san-francisco/events/314495594/?recId=030d1a0d-a77e-44f8-8cb1-47c3b843903f&recSource=event-search&searchId=3fb4762d-a7e7-4adc-8b87-d1083c814c2a&eventOrigin=find_page%24inPerson",
+    "location": "",
+    "query": "women in tech conference",
+    "snippet": "$17.47\nTech Networking Event San Francisco\nWed, Jun 24 · 6:30 PM PDT\nby Really Fun Things To Do In San Francisco\n1 attendee",
+    "source": "Meetup",
+    "title": "$17.47"
+  },
+  "https://www.meetup.com/san-francisco-ai-llms/events/315224844/": {
+    "appearances": 1,
+    "community": "General",
+    "date": "Jun 24",
+    "first_seen": "2026-06-22",
+    "last_seen": "2026-06-22",
+    "link": "https://www.meetup.com/san-francisco-ai-llms/events/315224844/?recId=9646d27c-6405-49e7-80b5-bf0fa419ad25&recSource=event-search&searchId=344e5096-224b-4b4c-9a76-9adeb689e261&eventOrigin=find_page%24inPerson",
+    "location": "",
+    "query": "developer conference",
+    "snippet": "AWS Agentic AI Summit - June Edition\nWed, Jun 24 · 4:30 PM PDT\nby SF AI/LLMs/ML Developers Group\n4.3\n2 attendees",
+    "source": "Meetup",
+    "title": "AWS Agentic AI Summit - June Edition"
+  },
+  "https://www.meetup.com/san-francisco-hackers-and-changemakers/events/315318793/": {
+    "appearances": 1,
+    "community": "General",
+    "date": "Jul 1",
+    "first_seen": "2026-06-22",
+    "last_seen": "2026-06-22",
+    "link": "https://www.meetup.com/san-francisco-hackers-and-changemakers/events/315318793/?recId=3bc59dd3-bafb-42ff-af28-e0c546ef7cb5&recSource=event-search&searchId=e0daa295-f508-4fc3-b5b0-080582e5647b&eventOrigin=find_page%24inPerson",
+    "location": "",
+    "query": "black tech conference",
+    "snippet": "6 seats left\nVirtuous Tech – Morning Coffee\nWed, Jul 1 · 9:00 AM PDT\nby San Francisco Hackers and Changemakers\n4 attendees",
+    "source": "Meetup",
+    "title": "6 seats left"
+  },
+  "https://www.meetup.com/san-francisco-old-techies/events/315357849/": {
+    "appearances": 1,
+    "community": "General",
+    "date": "Jul 1",
+    "first_seen": "2026-06-22",
+    "last_seen": "2026-06-22",
+    "link": "https://www.meetup.com/san-francisco-old-techies/events/315357849/?recId=e687035c-b58b-4a38-aa75-99c86bb4c496&recSource=event-search&searchId=e0daa295-f508-4fc3-b5b0-080582e5647b&eventOrigin=find_page%24inPerson",
+    "location": "",
+    "query": "black tech conference",
+    "snippet": "Older Techies Talking Nonsense (50+)\nWed, Jul 1 · 4:00 PM PDT\nby San Francisco Old Techies\n1 attendee",
+    "source": "Meetup",
+    "title": "Older Techies Talking Nonsense (50+)"
+  },
+  "https://www.meetup.com/sanfrancisco-startup-pitch-and-networking/events/314736464/": {
+    "appearances": 1,
+    "community": "General",
+    "date": "Jun 23",
+    "first_seen": "2026-06-22",
+    "last_seen": "2026-06-22",
+    "link": "https://www.meetup.com/sanfrancisco-startup-pitch-and-networking/events/314736464/?recId=3bc59dd3-bafb-42ff-af28-e0c546ef7cb5&recSource=event-search&searchId=e0daa295-f508-4fc3-b5b0-080582e5647b&eventOrigin=find_page%24inPerson",
+    "location": "",
+    "query": "black tech conference",
+    "snippet": "San Francisco HealthTech Connect: Networking for Startups, Investors, Innovators\nTue, Jun 23 · 7:00 PM PDT\nby San Francisco Startup Pitch and Networking\n4.0\n18 attendees",
+    "source": "Meetup",
+    "title": "San Francisco HealthTech Connect: Networking for Startups, Investors, Innovators"
+  },
+  "https://www.meetup.com/sanfrancisco-startup-pitch-and-networking/events/314736472/": {
+    "appearances": 1,
+    "community": "General",
+    "date": "Jun 22",
+    "first_seen": "2026-06-22",
+    "last_seen": "2026-06-22",
+    "link": "https://www.meetup.com/sanfrancisco-startup-pitch-and-networking/events/314736472/?recId=3bc59dd3-bafb-42ff-af28-e0c546ef7cb5&recSource=event-search&searchId=e0daa295-f508-4fc3-b5b0-080582e5647b&eventOrigin=find_page%24inPerson",
+    "location": "",
+    "query": "black tech conference",
+    "snippet": "$30.00\nSan Francisco Tech Connect: Startups, Investors, Professionals Networking\nMon, Jun 22 · 7:00 PM PDT\nby San Francisco Startup Pitch and Networking\n4.0\n27 attendees",
+    "source": "Meetup",
+    "title": "$30.00"
+  },
+  "https://www.meetup.com/sanfrancisco-startup-pitch-and-networking/events/314906436/": {
+    "appearances": 1,
+    "community": "General",
+    "date": "Jun 29",
+    "first_seen": "2026-06-22",
+    "last_seen": "2026-06-22",
+    "link": "https://www.meetup.com/sanfrancisco-startup-pitch-and-networking/events/314906436/?recId=030d1a0d-a77e-44f8-8cb1-47c3b843903f&recSource=event-search&searchId=3fb4762d-a7e7-4adc-8b87-d1083c814c2a&eventOrigin=find_page%24inPerson",
+    "location": "",
+    "query": "women in tech conference",
+    "snippet": "Health, Fitness, Beauty & Wellness: Business Networking event\nMon, Jun 29 · 7:00 PM PDT\nby San Francisco Startup Pitch and Networking\n4.0\n7 attendees",
+    "source": "Meetup",
+    "title": "Health, Fitness, Beauty & Wellness: Business Networking event"
+  },
+  "https://www.meetup.com/sanfrancisco-startup-pitch-and-networking/events/315011628/": {
+    "appearances": 1,
+    "community": "General",
+    "date": "Jun 30",
+    "first_seen": "2026-06-22",
+    "last_seen": "2026-06-22",
+    "link": "https://www.meetup.com/sanfrancisco-startup-pitch-and-networking/events/315011628/?recId=e687035c-b58b-4a38-aa75-99c86bb4c496&recSource=event-search&searchId=e0daa295-f508-4fc3-b5b0-080582e5647b&eventOrigin=find_page%24inPerson",
+    "location": "",
+    "query": "black tech conference",
+    "snippet": "$30.00\nSan Francisco AI & ML Professionals, Investors and Start-Ups Networking\nTue, Jun 30 · 7:00 PM PDT\nby San Francisco Startup Pitch and Networking\n4.0\n16 attendees",
+    "source": "Meetup",
+    "title": "$30.00"
+  },
+  "https://www.meetup.com/sanfrancisco-startup-pitch-and-networking/events/315024457/": {
+    "appearances": 1,
+    "community": "General",
+    "date": "Jul 6",
+    "first_seen": "2026-06-22",
+    "last_seen": "2026-06-22",
+    "link": "https://www.meetup.com/sanfrancisco-startup-pitch-and-networking/events/315024457/?recId=32f07ddb-1885-4a61-904a-300a9a9caae5&recSource=event-search&searchId=3fb4762d-a7e7-4adc-8b87-d1083c814c2a&eventOrigin=find_page%24inPerson",
+    "location": "",
+    "query": "women in tech conference",
+    "snippet": "Startups, Investors and Professionals Pitch and Networking Event\nMon, Jul 6 · 7:00 PM PDT\nby San Francisco Startup Pitch and Networking\n4.0\n11 attendees",
+    "source": "Meetup",
+    "title": "Startups, Investors and Professionals Pitch and Networking Event"
+  },
+  "https://www.meetup.com/sanfrancisco-startup-pitch-and-networking/events/315052569/": {
+    "appearances": 1,
+    "community": "Women in Tech",
+    "date": "Jul 7",
+    "first_seen": "2026-06-22",
+    "last_seen": "2026-06-22",
+    "link": "https://www.meetup.com/sanfrancisco-startup-pitch-and-networking/events/315052569/?recId=e687035c-b58b-4a38-aa75-99c86bb4c496&recSource=event-search&searchId=e0daa295-f508-4fc3-b5b0-080582e5647b&eventOrigin=find_page%24inPerson",
+    "location": "Tech, Fintech",
+    "query": "black tech conference",
+    "snippet": "Women in Tech, Fintech, AI, Startups, Networking Event & Elevator Pitch SF\nTue, Jul 7 · 7:00 PM PDT\nby San Francisco Startup Pitch and Networking\n4.0\n3 attendees",
+    "source": "Meetup",
+    "title": "Women in Tech, Fintech, AI, Startups, Networking Event & Elevator Pitch SF"
+  },
+  "https://www.meetup.com/sf-bay-area-game-jamming-game-design/events/315091283/": {
+    "appearances": 1,
+    "community": "General",
+    "date": "Jun 23",
+    "first_seen": "2026-06-22",
+    "last_seen": "2026-06-22",
+    "link": "https://www.meetup.com/sf-bay-area-game-jamming-game-design/events/315091283/?recId=9646d27c-6405-49e7-80b5-bf0fa419ad25&recSource=event-search&searchId=344e5096-224b-4b4c-9a76-9adeb689e261&eventOrigin=find_page%24inPerson",
+    "location": "Jun",
+    "query": "developer conference",
+    "snippet": "9 seats left\nGame Dev Coworking\nEvery Tue · Jun 23 · 12:15 PM PDT\nby SF Bay Area Game Jamming & Game Design\n4.9\n1 attendee",
+    "source": "Meetup",
+    "title": "9 seats left"
+  },
+  "https://www.meetup.com/sf-types-theorems-and-programming-languages/events/315272401/": {
+    "appearances": 1,
+    "community": "General",
+    "date": "Jul 5",
+    "first_seen": "2026-06-22",
+    "last_seen": "2026-06-22",
+    "link": "https://www.meetup.com/sf-types-theorems-and-programming-languages/events/315272401/?recId=9646d27c-6405-49e7-80b5-bf0fa419ad25&recSource=event-search&searchId=344e5096-224b-4b4c-9a76-9adeb689e261&eventOrigin=find_page%24inPerson",
+    "location": "",
+    "query": "developer conference",
+    "snippet": "Design and Implementation of the Andromeda Proof Assistant\nSun, Jul 5 · 12:00 PM PDT\nby SF Types, Theorems, and Programming Languages\n4.8\n7 attendees",
+    "source": "Meetup",
+    "title": "Design and Implementation of the Andromeda Proof Assistant"
+  },
+  "https://www.meetup.com/sftechmixer/events/313838165/": {
+    "appearances": 1,
+    "community": "General",
+    "date": "Jun 25",
+    "first_seen": "2026-06-22",
+    "last_seen": "2026-06-22",
+    "link": "https://www.meetup.com/sftechmixer/events/313838165/?recId=3bc59dd3-bafb-42ff-af28-e0c546ef7cb5&recSource=event-search&searchId=e0daa295-f508-4fc3-b5b0-080582e5647b&eventOrigin=find_page%24inPerson",
+    "location": "",
+    "query": "black tech conference",
+    "snippet": "SF Tech Mixer 2026\nThu, Jun 25 · 6:00 PM PDT\nby San Francisco Startups & Tech Mixer\n3.7\n59 attendees",
+    "source": "Meetup",
+    "title": "SF Tech Mixer 2026"
+  },
+  "https://www.meetup.com/silicon-valley-startup-idea-to-ipo/events/315337753/": {
+    "appearances": 1,
+    "community": "General",
+    "date": "Jun 24",
+    "first_seen": "2026-06-22",
+    "last_seen": "2026-06-22",
+    "link": "https://www.meetup.com/silicon-valley-startup-idea-to-ipo/events/315337753/?recId=3bc59dd3-bafb-42ff-af28-e0c546ef7cb5&recSource=event-search&searchId=e0daa295-f508-4fc3-b5b0-080582e5647b&eventOrigin=find_page%24inPerson",
+    "location": "",
+    "query": "black tech conference",
+    "snippet": "SVH Capital Presents: Dual Tech Summit 2026\nWed, Jun 24 · 9:00 AM PDT\nby Silicon Valley Startup: Idea to IPO\n4.5\n8 attendees",
+    "source": "Meetup",
+    "title": "SVH Capital Presents: Dual Tech Summit 2026"
+  },
   "https://www.meetup.com/smashing-your-sales-goalscbus/events/314829443/": {
     "_tier": "web",
-    "appearances": 4,
+    "appearances": 5,
     "community": "Black Tech",
     "date": "",
     "first_seen": "2026-05-30",
@@ -1605,6 +1945,58 @@
     "snippet": "**To reserve your spot for this event go here --&gt; https://luma.com/8yl7hchk** This event is sure to max out so reserve your spot today and learn the venue after registratio",
     "source": "Brave Search API",
     "title": "Black Tech Week: Columbus Meetup, Wed, May 20, 2026, 5:30 PM | Meetup"
+  },
+  "https://www.meetup.com/startup-grind/events/314832209/": {
+    "appearances": 1,
+    "community": "General",
+    "date": "Jun 25",
+    "first_seen": "2026-06-22",
+    "last_seen": "2026-06-22",
+    "link": "https://www.meetup.com/startup-grind/events/314832209/?recId=e687035c-b58b-4a38-aa75-99c86bb4c496&recSource=event-search&searchId=e0daa295-f508-4fc3-b5b0-080582e5647b&eventOrigin=find_page%24inPerson",
+    "location": "",
+    "query": "black tech conference",
+    "snippet": "AI Demo Series: June Edition (+ USA Soccer World Cup Watch Party)\nThu, Jun 25 · 5:30 PM PDT\nby Startup Grind Silicon Valley\n4.7\n1 attendee",
+    "source": "Meetup",
+    "title": "AI Demo Series: June Edition (+ USA Soccer World Cup Watch Party)"
+  },
+  "https://www.meetup.com/startup-networking-founder-ecosystem-san-francisco/events/314574091/": {
+    "appearances": 1,
+    "community": "General",
+    "date": "Jun 24",
+    "first_seen": "2026-06-22",
+    "last_seen": "2026-06-22",
+    "link": "https://www.meetup.com/startup-networking-founder-ecosystem-san-francisco/events/314574091/?recId=030d1a0d-a77e-44f8-8cb1-47c3b843903f&recSource=event-search&searchId=3fb4762d-a7e7-4adc-8b87-d1083c814c2a&eventOrigin=find_page%24inPerson",
+    "location": "",
+    "query": "women in tech conference",
+    "snippet": "Founders, Investors & Talent Networking Mixer | San Francisco\nWed, Jun 24 · 7:00 PM PDT\nby Startup Networking & Founder Ecosystem | San Francisco\n30 attendees",
+    "source": "Meetup",
+    "title": "Founders, Investors & Talent Networking Mixer | San Francisco"
+  },
+  "https://www.meetup.com/startup-networking-founder-ecosystem-san-francisco/events/315227732/": {
+    "appearances": 1,
+    "community": "General",
+    "date": "Jun 24",
+    "first_seen": "2026-06-22",
+    "last_seen": "2026-06-22",
+    "link": "https://www.meetup.com/startup-networking-founder-ecosystem-san-francisco/events/315227732/?recId=e687035c-b58b-4a38-aa75-99c86bb4c496&recSource=event-search&searchId=e0daa295-f508-4fc3-b5b0-080582e5647b&eventOrigin=find_page%24inPerson",
+    "location": "San Francisco by Ascent Valley",
+    "query": "black tech conference",
+    "snippet": "AI & Tech Networking Event in San Francisco by Ascent Valley\nWed, Jun 24 · 7:00 PM PDT\nby Startup Networking & Founder Ecosystem | San Francisco\n5 attendees",
+    "source": "Meetup",
+    "title": "AI & Tech Networking Event in San Francisco by Ascent Valley"
+  },
+  "https://www.meetup.com/techgirlssocial/events/315319064/": {
+    "appearances": 1,
+    "community": "General",
+    "date": "Jul 12",
+    "first_seen": "2026-06-22",
+    "last_seen": "2026-06-22",
+    "link": "https://www.meetup.com/techgirlssocial/events/315319064/?recId=3bc59dd3-bafb-42ff-af28-e0c546ef7cb5&recSource=event-search&searchId=e0daa295-f508-4fc3-b5b0-080582e5647b&eventOrigin=find_page%24inPerson",
+    "location": "",
+    "query": "black tech conference",
+    "snippet": "Ferry Fest @SF Ferry Building\nSun, Jul 12 · 12:00 PM PDT\nby Tech Girls Social\n4.8\n9 attendees",
+    "source": "Meetup",
+    "title": "Ferry Fest @SF Ferry Building"
   },
   "https://www.meetup.com/technology-ai/events/314879532/": {
     "appearances": 1,
